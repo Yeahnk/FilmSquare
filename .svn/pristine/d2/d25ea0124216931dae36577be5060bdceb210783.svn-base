@@ -1,0 +1,70 @@
+package member.controller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import member.servive.AtchFileServiceImpl;
+import member.servive.IAtchFileService;
+import member.servive.IMemberService;
+import member.servive.MemberServiceImpl;
+import member.vo.AtchFileVO;
+import member.vo.MemberVO;
+
+@WebServlet("/mypage.do")
+public class pfController extends HttpServlet {
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		// 멤버 기본정보
+		MemberVO mv= (MemberVO) req.getSession().getAttribute("LOGIN_USER");
+
+		String memId = mv.getMemId();
+		
+		IMemberService memService = MemberServiceImpl.getInstance();
+		
+		mv = memService.searchMember(memId);
+		
+		// 멤버 프로필 사진 띄우기
+		IAtchFileService fileService = AtchFileServiceImpl.getInstance();
+		
+		AtchFileVO atchFileVO = new AtchFileVO();
+		
+		atchFileVO = fileService.getMember(memId);
+		
+			req.setAttribute("mv", mv);
+			req.setAttribute("atchFileVO", atchFileVO);
+			
+		req.getRequestDispatcher("/views/member/mypage.jsp").forward(req,resp);
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+	String memId = req.getParameter("memId");
+	String mempId = req.getParameter("mempId");
+	
+	IAtchFileService fileService = AtchFileServiceImpl.getInstance();
+	AtchFileVO atchFileVO = new AtchFileVO();
+	atchFileVO = fileService.saveAtchFileList(req.getParts());
+
+	AtchFileVO mv = new AtchFileVO();
+	if(atchFileVO == null) {
+		mv.setMempId((mempId));
+	
+	}else {
+		mv.setMempId(atchFileVO.getMempId());
+		
+	}
+	
+	String msg = "";
+
+	/*
+	 * if (cnt > 0) { msg = "성공"; } else { msg = "실패"; }
+	 */
+	}
+}

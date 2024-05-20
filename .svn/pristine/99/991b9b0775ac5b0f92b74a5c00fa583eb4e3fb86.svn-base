@@ -1,0 +1,13 @@
+package admin.vo;
+
+public class EBImageVO {
+	
+	private int ebiId;
+	private int ebId;
+	private int ebiSn;
+	private String ebiPath;
+	private String ebiStreNm;
+	private String ebiOrgnNm;
+	private String ebiExtsn;
+	private String ebiSize;
+}  

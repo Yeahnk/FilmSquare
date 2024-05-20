@@ -1,0 +1,21 @@
+package admin.vo;
+
+import java.time.LocalDate;
+
+import lombok.Data;
+
+@Data
+public class EditorBoardVO {
+	private int ebId;
+	private String ebTitle;
+	private LocalDate ebDate;
+	private String ebYn;
+	
+	private int ebiId; // 첨부사진 pk
+	
+	  
+	public boolean getEbYn() {
+	
+		return "Y".equals(ebYn);
+	 }
+}

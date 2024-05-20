@@ -1,0 +1,31 @@
+package character.service;
+
+import java.util.List;
+
+import character.dao.CharacterDaoImpl;
+import character.dao.ICharacterDao;
+import character.vo.CharacterVO;
+
+public class CharacterServiceImpl implements ICharacterService {
+	
+	private static ICharacterService charService;
+	
+	private static ICharacterDao charDao;
+	
+	private CharacterServiceImpl() {
+		charDao = CharacterDaoImpl.getInstance();
+	}
+	
+	public static ICharacterService getInstance() {
+		if(charService == null) {
+			charService = new CharacterServiceImpl();
+		}
+		return charService;
+	}
+
+	@Override
+	public List<CharacterVO> getCharList(String kwd) {
+		return charDao.getCharList(kwd);
+	}
+
+}

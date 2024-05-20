@@ -1,0 +1,42 @@
+<%@page import="member.vo.MemberVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+
+  <!-- ***** 헤더영역 시작 ***** -->
+  <header class="header-area header-sticky">
+      <div class="container">
+          <div class="row">
+              <div class="col-12">
+                  <nav class="main-nav">
+                      <!-- ***** 로고 시작 ***** -->
+                      <a href="<%=request.getContextPath()%>/main.do" class="logo">
+                          Edu Meeting
+                      </a>
+                      <!-- ***** 로고 끝 ***** -->
+                      <!-- ***** 상단 메뉴 시작 ***** -->
+                      <ul class="nav">
+                          <li><a href="./map.do"><span class="glyphicon glyphicon-map-marker">&nbsp;</span>내 근처 영화관 찾기</a></li>
+     					  <li><a href="#"><span class="glyphicon glyphicon-calendar">&nbsp;</span>개봉 예정작 일정보기</a></li>
+                          <li class="scroll-to-section"><form id="search-bar" class="navbar-form" role="search">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Search"
+								name="search">
+						</div>
+						<button type="submit" class="btn btn-default">
+							<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</form></li> 
+                         <li><a href="./memLogin.do"><span
+						      class="glyphicon glyphicon-log-in"></span> Login</a></li> 
+                      </ul>        
+                      <a class='menu-trigger'>
+                          <span>Menu</span>
+                      </a>
+                      <!-- ***** 상단 메뉴 끝 ***** -->
+                  </nav>
+              </div>
+          </div>
+      </div>
+  </header>
+  <!-- ***** 헤더영역 끝 ***** -->

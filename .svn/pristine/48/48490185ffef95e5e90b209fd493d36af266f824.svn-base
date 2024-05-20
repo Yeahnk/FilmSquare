@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dbTest">
+
+	
+	<select id="selectPersonList" resultType="PersonVO">
+	
+		select * from person where ps_id = #{i}
+	
+	</select>
+	
+	<select id="selectSameNameList" resultType="PersonVO">
+	
+		select * from person where ps_name = #{psName} and ps_id != #{psId}
+	
+	</select>
+	
+	
+	
+	
+	<!-- 이미지 관련 -->
+	
+	<select id="selectImages" parameterType="Map" resultType="PersonImageVO">
+	
+		select * from personimage where ps_id != #{winPerson} and ps_id = #{losingPerson} 
+	
+	</select>
+	
+	
+	<select id="selectImagesChk" resultType="PersonImageVO">
+	
+		select * from personimage where psi_src = #{losePersonImage} and ps_id = #{winPerson}	
+	
+	</select>
+	
+	
+	<update id="updateImages" parameterType="Map">
+	
+		update personimage set ps_id = #{winPerson} where ps_id = #{losingPerson} and psi_src = #{losePersonImage}
+	
+	</update>
+	
+	<delete id="deleteDuplImg" parameterType="Map">
+	
+		delete from personimage where ps_id = #{losingPerson} and  psi_src = #{losePersonImage}
+	
+	</delete>
+	
+	
+	
+	
+	<!-- 인물정보 관련 -->
+	<select id="selectLoserPsInfo" parameterType="Map" resultType="PersonInfoVO">
+	
+		select * from personinfo where ps_id != #{winPerson} and ps_id = #{losingPerson} 
+	
+	</select>
+	
+	<select id="selectPsInfo" parameterType="Map" resultType="PersonInfoVO">
+	
+		select * from personinfo where ps_id = #{winPerson} and psinfo_val = #{loosingPersonInfo}
+	
+	</select>
+	
+	
+	<update id="updatePsInfo" parameterType="Map">
+	
+		update personinfo set ps_id = #{winPerson} where ps_id = #{losingPerson} and psinfo_val = #{loosingPersonInfo}
+	
+	</update>
+	
+	<delete id="deleteDuplPsInfo" parameterType="Map">
+	
+		delete from personinfo where ps_id = #{losingPerson} and psinfo_val = #{loosingPersonInfo}
+	
+	</delete>
+	
+	
+	
+	<!-- 액터 관련 -->
+	
+	<select id="selectLoserActorInfo" resultType="ActorVO">
+	
+		select * from actor where ps_id != #{winPerson} and ps_id = #{losingPerson} 
+	
+	</select>
+	
+	<select id="selectActorInfo" parameterType="Map" resultType="ActorVO">
+	
+		select * from actor where ps_id != #{actorRole} and actor_role = #{loosingActor}
+	
+	</select>
+	
+	<update id="updateActors" parameterType="Map">
+	
+		update actor set ps_id = #{winPerson} where ps_id = #{losingPerson} and actor_role = #{loosingActor}
+	
+	</update>
+	
+	<delete id="deleteDuplActorInfo" parameterType="Map">
+	
+		delete from actor where ps_id = #{losingPerson} and actor_role = #{loosingActor}
+	
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	<delete id="deleteLoser" parameterType="Map">
+	
+		delete from person where ps_id = #{losingPerson}
+	
+	</delete>
+	
+
+
+</mapper>

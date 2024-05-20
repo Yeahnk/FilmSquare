@@ -1,0 +1,7 @@
+package movie.dao;
+
+public interface IMovieGradeDao {
+
+	int getGradeAvg(int mvId);
+
+}

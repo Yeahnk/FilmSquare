@@ -1,0 +1,26 @@
+package collection.vo;
+
+import java.math.BigDecimal;
+
+import lombok.Data;
+
+@Data
+public class CollcontentVO {
+	private BigDecimal mvId;
+	private BigDecimal clId;
+	
+	
+	public CollcontentVO(int clId) {
+		super();
+		this.clId = new BigDecimal(clId);
+	}
+
+
+	public CollcontentVO(BigDecimal mvId, BigDecimal clId) {
+		super();
+		this.mvId = mvId;
+		this.clId = clId;
+	}
+	
+	
+}

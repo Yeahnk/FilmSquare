@@ -1,0 +1,31 @@
+package comment.dao;
+
+public class CommentDaoImpl implements ICommentDao{
+	
+	private static ICommentDao commentDao;
+	
+	private CommentDaoImpl() {}
+	
+	public static ICommentDao getInstance() {
+		
+		if(commentDao == null) {
+			commentDao = new CommentDaoImpl();
+		}
+		return commentDao;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

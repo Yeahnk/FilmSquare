@@ -1,0 +1,12 @@
+package movie.service;
+
+import java.util.List;
+
+import movie.vo.PosterVO;
+
+public interface IPosterService {
+
+	PosterVO getPosterByMvId(int mvId);
+	
+
+}

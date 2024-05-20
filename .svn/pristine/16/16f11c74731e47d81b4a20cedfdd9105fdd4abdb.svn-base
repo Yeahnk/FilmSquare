@@ -1,0 +1,13 @@
+package movie.dao;
+
+import java.util.List;
+
+import movie.vo.PosterVO;
+
+public interface IPosterDao {
+
+	PosterVO getPosterByMvId(int mvId);
+	
+	
+
+}

@@ -1,0 +1,27 @@
+package movie.service;
+
+import movie.dao.IMovieGradeDao;
+import movie.dao.MovieGradeDaoImpl;
+
+public class MovieGradeServiceImpl implements IMovieGradeService {
+
+	IMovieGradeDao dao;
+	
+	private static IMovieGradeService singleTon;
+	
+	private MovieGradeServiceImpl() {
+		dao = MovieGradeDaoImpl.getInstance();
+	};
+	
+	public static IMovieGradeService getInstance() {
+		if( singleTon ==null) {
+			singleTon = new MovieGradeServiceImpl();
+		}
+		return singleTon;
+	}
+
+	@Override
+	public int getGradeAvg(int mvId) {
+		return dao.getGradeAvg(mvId);
+	}
+}

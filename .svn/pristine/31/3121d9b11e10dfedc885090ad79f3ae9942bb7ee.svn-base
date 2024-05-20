@@ -1,0 +1,76 @@
+
+<%@page import="member.vo.MemberVO"%>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+
+	List<MemberVO> memberList =(List<MemberVO>)request.getAttribute("memberList");
+	
+	String msg = session.getAttribute("msg") == null ? ""
+			: (String)session.getAttribute("msg");
+	session.removeAttribute("msg");
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원 조회</title>
+</head>
+<body>
+	<h1>회원 조회</h1>
+	<h3>회원을 조회합니다.</h3>
+	<table border="1">
+		<tr>
+			<th>이메일</th>
+			<th>이름</th>
+			<th>닉네임</th>
+			<th>전화</th>
+			<th>생년월일</th>
+			<th>성별</th>
+			<th>신고건수</th>
+			<th>관리</th>
+		</tr>
+
+<%
+	if(memberList.size()==0){
+		
+%>	
+		<tr>
+			<td colspan="8">회원 정보가 존재하지 않습니다.</td>
+		
+		</tr>
+<%
+	}else{
+		
+		for(MemberVO mv : memberList){
+		
+%>		
+		<tr>
+			<td><%=mv.getMemId() %></td>
+			<td><%=mv.getMemName() %></td>
+			<td><%=mv.getMemNcnm() %></td>
+			<td><%=mv.getMemTelno() %></td>
+			<td><%=mv.getMemBirth() %></td>
+			<td><%=mv.getMemMW() %></td>
+			<td><%=mv.getReportCount() %></td>
+			<td><a href="#">수정</a></td>
+		</tr>
+<%
+		}
+	}
+%>
+	</table>
+<%
+	if(msg.equals("성공")){
+%>
+<script>
+	alert('정상적으로 처리되었습니다.');
+</script>
+<%
+	}
+%>
+</body>
+</html>

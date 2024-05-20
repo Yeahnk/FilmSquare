@@ -1,0 +1,39 @@
+package movie.dao;
+
+import java.util.List;
+
+import movie.vo.MvGradeVO;
+import movie.vo.MovieInfoVO;
+import movie.vo.PosterVO;
+import util.MyBatisDao;
+
+public class MovieDetailDaoImpl extends MyBatisDao implements IMovieDetailDao{
+	private static IMovieDetailDao movieDetailDao;
+	
+	private MovieDetailDaoImpl() {}
+	
+	public static IMovieDetailDao getInstance() {
+		
+		if(movieDetailDao == null) {
+			movieDetailDao = new MovieDetailDaoImpl();
+		}
+		return movieDetailDao;
+	}
+	
+
+	@Override
+	public MovieInfoVO getMovieDetail(int mvId) {
+
+		return selectOne("movie.getMovieDetail", mvId);
+	}
+
+	@Override
+	public PosterVO getMoviePoster(int mvId) {
+		return selectOne("movie.getMoviePoster", mvId);
+	}
+
+	@Override
+	public MvGradeVO getMovieGrade(int mvId) {
+		return selectOne("movie.getMovieGrade", mvId);
+	}
+}

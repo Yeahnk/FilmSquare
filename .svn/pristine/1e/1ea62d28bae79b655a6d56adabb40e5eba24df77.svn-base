@@ -1,0 +1,5 @@
+package movie.vo;
+
+public class MovieGradeVO {
+
+}

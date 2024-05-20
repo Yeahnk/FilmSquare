@@ -1,0 +1,80 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>아이디 찾기</title>
+    <style>
+        /* 추가: 기본적인 스타일링을 위한 CSS */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .search-title {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        .form-search {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .find-name,
+        .find-phone {
+            margin-bottom: 15px;
+        }
+        .btnSearch {
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <form action="/findEmail.jsp" name="memberfind" method="POST">
+        <div class="search-title">
+            <h3>휴대폰 본인확인</h3>
+        </div>
+        <section class="form-search">
+            <div class="find-name">
+                <label>이름</label>
+                <input type="text" name="memName" class="btn-name" placeholder="등록한 이름">
+            </div>
+            <div class="find-phone">
+                <label>번호</label>
+                <input type="text" name="memTelno" class="btn-phone" placeholder="휴대폰 번호를 입력 (예: 010-1234-5678)">
+            </div>
+        </section>
+        <div class="btnSearch">
+            <input type="button" name="enter" value="찾기" onClick="email_search()">
+            <input type="button" name="cancel" value="취소" onClick="history.back()">
+        </div>
+    </form>
+    
+      <script>
+        function email_search() {
+            var frm = document.memberfind;
+
+            if (frm.memName.value.trim() === "") {
+                alert("이름을 입력해주세요");
+                return;
+            }
+
+            // 추가: 정규 표현식을 사용하여 유효한 휴대폰 번호인지 확인
+            var phoneRegex = /^\d{3}-\d{3,4}-\d{4}$/;
+            if (!phoneRegex.test(frm.memTelno.value.trim())) {
+                alert("유효한 휴대폰 번호를 입력해주세요 (예: 010-1234-5678)");
+                return;
+            }
+
+            frm.method = "post";
+            frm.action = "../../findEmail.do";
+            frm.submit();
+        }
+    </script>  
+</body>
+</html>

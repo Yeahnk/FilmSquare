@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<%@page import="admin.vo.MvcReportVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%  List<MvcReportVO> list = (List<MvcReportVO>)request.getAttribute("mvcReportList"); %>
+<html lang="en">
+<head>
+  <title>신고사유 조회</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>신고사유 조회</h2>
+  <p>신고사유를 보여주는 페이지입니다.</p>            
+  <table class="table">
+    <thead>
+      <tr>
+        <th><%=list.get(0).getMemId()%>님의 신고 사유</th>
+      </tr>
+    </thead>
+    <tbody>
+     	<%
+	   
+	    	if(list != null){
+		    	for(int i=0; i<list.size(); i++){
+		%>
+	      <tr>
+	        <td><%=list.get(i).getMvcrpContent() %></td>
+	      </tr>
+	    <%
+	    		}//for end
+	    	}else{
+	    %>
+	    		<tr>
+		          <td>게시물 없음</td>
+		      	</tr>
+		<%			      
+	    	}
+	    %>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

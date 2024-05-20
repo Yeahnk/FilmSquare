@@ -1,0 +1,48 @@
+package movie.vo;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
+import lombok.Data;
+
+@Data
+public class ReleasingMovieVO {
+	
+	private BigDecimal mvId;
+	private String mvTitle;
+	private String mvUrl;
+	private String mvKmid;
+	private String mvKmseq;
+	private String mvCode;
+	private BigDecimal mvRtime;
+	private Timestamp mvRdate;
+	private String mvDirector;
+	private String mvRyear;
+	private String mvPlot;
+	private String mvGenre;
+	private String mvAgelimit;
+	private String mvEngtitle;
+	private String mvNation;
+	
+	public ReleasingMovieVO(BigDecimal mvId, String mvTitle, String mvUrl, String mvKmid, String mvKmseq, String mvCode,
+			BigDecimal mvRtime, Timestamp mvRdate, String mvDirector, String mvRyear, String mvPlot, String mvGenre,
+			String mvAgelimit, String mvEngtitle, String mvNation) {
+		super();
+		this.mvId = mvId;
+		this.mvTitle = mvTitle;
+		this.mvUrl = mvUrl;
+		this.mvKmid = mvKmid;
+		this.mvKmseq = mvKmseq;
+		this.mvCode = mvCode;
+		this.mvRtime = mvRtime;
+		this.mvRdate = mvRdate;
+		this.mvDirector = mvDirector;
+		this.mvRyear = mvRyear;
+		this.mvPlot = mvPlot;
+		this.mvGenre = mvGenre;
+		this.mvAgelimit = mvAgelimit;
+		this.mvEngtitle = mvEngtitle;
+		this.mvNation = mvNation;
+	}
+
+}

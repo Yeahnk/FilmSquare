@@ -1,0 +1,160 @@
+
+<%@page import="admin.vo.QnaVO"%>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+
+	List<QnaVO> qnaList =(List<QnaVO>)request.getAttribute("qnaList");
+	
+	String msg = session.getAttribute("msg") == null ? ""
+			: (String)session.getAttribute("msg");
+	session.removeAttribute("msg");
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>문의 게시판 조회</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+table {
+/*   table-layout: fixed; */
+}
+table, th, tr {
+  text-align: center;
+}
+
+.pager {
+  float: left;
+}
+#pageArea {
+  display: flex;
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+	<h1>문의 게시판 전체 조회</h1>
+	<h3>문의 게시판을 전체 조회합니다.</h3>
+<div class="col-sm-8 text-left"> 
+
+	<!-- 리스트출력 영역 start -->
+	 <div id="listArea">
+	  	<table class="table table-hover">
+		    <thead>
+		      <tr>
+		        <th style="width: 10%">순번</th>
+		        <th style="width: 35%">문의내용</th>
+		        <th style="width: 15%">작성자 이메일</th>
+		        <th style="width: 15%">작성일</th>
+		        <th style="width: 15%">전체보기</a></th>
+		        <th style="width: 15%">답변여부</a></th>
+		      </tr>
+		    </thead>
+		    <tbody>
+
+		<%
+	    	List<QnaVO> list = (List<QnaVO>)request.getAttribute("qnaList");
+	    	if(list != null){
+		    	for(int i=0; i<list.size(); i++){
+	    %>
+	      <tr>
+	        <td><%=list.get(i).getQaId() %></td>
+	        <td><%=list.get(i).getQaContent() %></td>
+	        <td><%=list.get(i).getQaEmail() %></td>
+	        <td><%=list.get(i).getQaDate() %></td>
+	        <td><a href ="#">전체보기</a></td>
+	        <td><a href ="#">답변/미답변</a></td>
+	      </tr>
+	    <%
+	    		}//for end
+	    	}else{
+	    %>
+	    		<tr>
+		          <td>게시물 없음</td>
+		      	</tr>
+		<%			      
+	    	}
+	    %>
+	    </tbody>
+	  </table>
+  </div>
+	
+	<!-- 페이징 영역 start -->		
+	<div id="pageArea">
+		
+		<ul class="pager">
+		  <li class="prev"><a href="#">Prev</a></li>
+		</ul>
+		
+		<ul class="pagination pager">
+		<%
+			int sPage = (int)request.getAttribute("sPage");
+			int ePage = (int)request.getAttribute("ePage");
+			int cPage = (int)request.getAttribute("cPage");
+	
+			for(int i=sPage; i<=ePage; i++){
+				//페이지번호 활성화 처리
+				if(cPage == i){
+		%>
+		  <li class="active"><a href="#"><%=i %></a></li>
+		<%			
+				}else{
+		%>
+		  <li><a href="#"><%=i %></a></li>
+		<%
+				}
+			}//for end %>
+		</ul>
+		
+		<ul class="pager">
+		  <li class="next"><a href="#">Next</a></li>
+		</ul>
+	</div>
+	<!-- 페이징 영역 end -->		
+</div>
+
+<script>
+	$('.pagination li').on('click',function(){
+// 		alert( $(this).text() );
+		location.href="/FilmSquare/admin/qboard/list.do?page=" + $(this).text();
+	});
+	
+	$('.next').on('click',function(){
+// 		alert( parseInt($('.pagination').children().last().text()) +1 );
+		currentPage = parseInt($('.pagination').children().last().text()) +1;
+		
+		//현재 페이지가 totalPage보다 클때 페이지정보를 넘기지 않음
+		if(<%=request.getAttribute("ttPage")%> < currentPage) return;
+		location.href="/FilmSquare/admin/qboard/list.do?page=" + currentPage;
+	});
+	
+	$('.prev').on('click',function(){
+		
+		currentPage = parseInt($('.pagination').children().first().text()) -1;
+		//현재페이지가 0보다 작거나 같을 때
+		if(currentPage <= 0) return;
+		location.href="/FilmSquare/admin/qboard/list.do?page=" + currentPage;
+	});
+
+
+
+</script>	
+	
+	
+<%
+	if(msg.equals("성공")){
+%>
+<script>
+	alert('정상적으로 처리되었습니다.');
+</script>
+<%
+	}
+%>
+</body>
+</html>

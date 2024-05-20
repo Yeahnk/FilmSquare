@@ -1,0 +1,64 @@
+package movie.controller;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import movie.service.IReleasingMovieService;
+import movie.service.ReleasingMovieServiceImpl;
+import movie.vo.CalendarVO;
+import movie.vo.ReleasingMovieVO;
+
+@WebServlet("/releasingCal.do")
+public class ReleasingMovieController extends HttpServlet {
+
+	static IReleasingMovieService releasingMovieService = ReleasingMovieServiceImpl.getInstance();
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+		
+		Calendar cal = Calendar.getInstance();
+		
+		// year, month 기본적으로 오늘로 설정
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH)+1;
+		
+		// 파라미터 받아오기
+		String sy = request.getParameter("year");
+		String sm = request.getParameter("month");
+		
+		// 파라미터 넘어왔는지 확인
+		// 처음 접속 시 파라미터 없음
+		if( sy != null) {
+			year = Integer.parseInt(sy);
+		}
+		if( sm != null) {
+			month = Integer.parseInt(sm);
+		}
+		
+		LocalDate calDate = LocalDate.of(year,month,1);
+		
+		List<ReleasingMovieVO> releasingList = releasingMovieService.getReleaseList(calDate);
+		
+		CalendarVO calVo = new CalendarVO(year, month, releasingList);
+		
+		request.setAttribute("calVo", calVo);
+		request.getRequestDispatcher("/views/ReleasingMovie.jsp").forward(request, resp);
+
+	}
+
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.doPost(req, resp);
+	}
+
+}

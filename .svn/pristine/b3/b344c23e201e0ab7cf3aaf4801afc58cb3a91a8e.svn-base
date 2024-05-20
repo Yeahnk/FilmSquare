@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="adminEditor">
+
+	<!-- 이 영역에 SQL문에 맞는 태그를 사용하여 SQL문을 기술한다. 사용할 수 있는 기본적인 태그들 <select> ~~~ 
+		</select> <insert> ~~~ </insert> <update> ~~~ </update> <delete> ~~~ </delete> 
+		위 태그에서 사용되는 속성들 1) id : 해당 태그(SQL)를 호출할 때 namespace값과 연결하여 사용하는 고유 ID값 2) 
+		parameterType : SQL문에 사용될 데이터가 들어있는 객체타입을 지정한다. (보통 VO클래스 또는 자바의 자료형이름 등이 
+		사용된다.) 3) resultType : select문을 실행한 결과를 담을 객체타입을 지정한다. 4) resultMap : 결과레코드 
+		컬럼명과 VO객체의 속성명이 다를 경우에 적절한 매핑을 위해 사용한다. -->
+
+	<!--전체 글 개수 조회 -->
+	<select id="ecountList" resultType="int">
+		SELECT COUNT(*) FROM editorboard
+	</select>
+
+
+	<!-- 에디터게시판 전체 조회 -->
+	<select id="editorList" parameterType="map"
+		resultType="admin.vo.EditorBoardVO">
+
+		select A.* from(
+		select ROWNUM AS RNUM, B.* from(
+		select * from editorboard order by eb_id DESC
+		)B
+		<![CDATA[ where ROWNUM <= #{end}
+		)A where A.rnum >= #{start} ]]>
+
+
+	</select>
+
+	<select id="editorDetail" parameterType="int"
+		resultType="admin.vo.EditorBoardVO">
+
+		SELECT
+		a.EB_ID ebId,
+		a.EB_TITLE ebTitle,
+		a.EB_DATE ebDate,
+		a.EB_YN ebYn,
+		b.ebt_content ebtContent,
+		c.ebi_path ebiPath,
+		c.ebi_stre_nm ebiStreNm,
+		c.ebi_orgn_nm ebiOrgnNm,
+		c.ebi_extsn ebiExtsn
+		FROM
+		editorboard a,
+		ebtext b,
+		ebimage c
+		WHERE
+		a.eb_id = #{ebId}
+		AND a.eb_id = b.eb_id
+		AND a.eb_id = c.eb_id
+
+	</select>
+
+
+	<resultMap type="admin.vo.EditorBoardVO" id="editorBoardMap">
+
+		<id column="eb_id" property="ebId" />
+		<result column="eb_tilte" property="ebTitle" />
+		<result column="eb_date" property="ebDate" />
+		<result column="eb_yn" property="ebYn" />
+
+	</resultMap>
+
+
+
+	<!-- 에디터 게시판 제목 등록 -->
+	<insert id="editorInsert" parameterType="admin.vo.EditorBoardVO">
+
+		<selectKey keyProperty="ebId" resultType="int"
+			order="BEFORE">
+			select EDITORBOARD_SEQ.nextval from dual
+		</selectKey>
+
+		insert into EDITORBOARD (EB_ID, EB_TITLE, EB_DATE)
+		values (#{ebId}, #{ebTitle} , sysdate)
+
+	</insert>
+
+
+	<!-- 에디터 텍스트 등록 -->
+	<insert id="ebtInsert" parameterType="admin.vo.EBTextVO">
+
+		insert into EBTEXT (EBT_ID,EB_ID,EBT_SN,EBT_CONTENT)
+		values (EBTEXT_num_seq.nextval, (select max(eb_id) from editorboard), 1,
+		#{ebtContent})
+
+	</insert>
+
+	<!-- 에디터 이미지 등록 -->
+	<insert id="ebiInsert" parameterType="admin.vo.AtchFileVO">
+
+		insert into EBIMAGE (
+		EBI_ID,
+		EB_ID,
+		EBI_SN,
+		EBI_PATH,
+		EBI_STRE_NM,
+		EBI_ORGN_NM,
+		EBI_EXTSN,
+		EBI_SIZE)
+		values (
+		EBIMAGE_num_seq.nextval,
+		(select max(eb_id) from editorboard),
+		#{ebiSn},
+		#{ebiPath},
+		#{ebiStreNm},
+		#{ebiOrgnNm},
+		#{ebiExtsn},
+		#{ebiSize})
+
+	</insert>
+
+
+
+
+
+
+</mapper>

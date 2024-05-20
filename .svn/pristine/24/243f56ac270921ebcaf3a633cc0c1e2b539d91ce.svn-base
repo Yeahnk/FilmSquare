@@ -1,0 +1,28 @@
+package comment.service;
+
+import comment.dao.CommentDaoImpl;
+import comment.dao.ICommentDao;
+
+public class CommentServiceImple implements ICommentService {
+
+	private static ICommentService commentService;
+	
+	private static ICommentDao commentDao;
+	
+	public CommentServiceImple() {
+		commentDao = CommentDaoImpl.getInstance();
+	}
+	
+	public static ICommentService getInstance() {
+		
+		if(commentService == null) {
+			commentService = new CommentServiceImple();
+		}
+		return commentService;
+	}
+	
+	
+	
+	
+	
+}

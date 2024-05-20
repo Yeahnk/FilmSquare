@@ -1,0 +1,41 @@
+package movie.controller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import movie.service.IMovieDetailService;
+import movie.service.MovieDetailServiceImpl;
+import movie.vo.MvCollectionVO;
+
+@WebServlet("/myClInsert.do")
+public class MyClInsertController extends HttpServlet{
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int clId = Integer.parseInt(req.getParameter("clId"));
+		int mvId = Integer.parseInt(req.getParameter("mvId"));
+		IMovieDetailService movieDetailService = MovieDetailServiceImpl.getInstance();
+		MvCollectionVO cv = new MvCollectionVO();
+		cv.setClId(clId);
+		cv.setMvId(mvId);
+		System.out.println("나의컬렉션에넣기:"+cv);
+		
+		int exist = movieDetailService.clExist(cv);
+		System.out.println("컬렉션존재?:"+exist);
+		int cnt = 0;
+		if(exist == 0) {
+		cnt = movieDetailService.myClInsert(cv);
+		}
+		
+		
+	}
+}

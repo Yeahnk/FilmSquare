@@ -1,0 +1,13 @@
+package comment.service;
+
+import java.util.List;
+
+import comment.vo.ReplyVO;
+
+public interface IReplyService {
+
+	int rvInsert(ReplyVO rv);
+
+	List<ReplyVO> getList(int mvcId);
+
+}

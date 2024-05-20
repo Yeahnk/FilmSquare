@@ -1,0 +1,34 @@
+package member.servive;
+
+import java.util.List;
+
+import member.dao.IMemberDao;
+import member.dao.MemberDaoImpl;
+import member.vo.MemberVO;
+
+public class MemberServiceImpl implements IMemberService {
+	
+	private static IMemberService memService;
+	IMemberDao memDao;
+	
+	public static IMemberService getInstance() {
+		if(memService == null) {
+			memService = new MemberServiceImpl();
+		}
+		return memService;
+	}
+	public MemberServiceImpl() {
+		memDao = MemberDaoImpl.getInstance();
+	}
+
+	
+	@Override
+	public List<MemberVO> getMemberList() {
+		return memDao.getMemberList();
+	}
+	
+	
+
+	
+	
+}

@@ -1,0 +1,29 @@
+package movie.service;
+
+import movie.vo.MvGradeVO;
+import movie.vo.MovieInfoVO;
+import movie.vo.PosterVO;
+
+public interface IMovieDetailService {
+
+	/**
+	 * 메인에서 영화를 선택하면 mvId를 받아 상세페이지에 해당 영화의 정보를 가져오기 위한 메서드
+	 * @param mvId
+	 * @return 선택한 MovieInfoVO
+	 */
+	public MovieInfoVO getMovieDetail(int mvId);
+
+	/**
+	 * 메인에서 영화를 선택하면 mvId를 받아 상세페이지에 해당 영화의 정보를 가져오기 위한 메서드
+	 * @param mvId
+	 * @return
+	 */
+	public PosterVO getMoviePoster(int mvId);
+
+	/**
+	 * 메인에서 영화를 선택하면 mvId를 받아 상세페이지에 해당 영화의 평균 별점을 가져오기 위한 메서드
+	 * @param mvId
+	 * @return
+	 */
+	public MvGradeVO getMovieGrade(int mvId);
+}

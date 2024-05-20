@@ -1,0 +1,83 @@
+package member.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.session.SqlSession;
+
+import config.MyBatisUtil;
+import member.vo.AtchFileVO;
+import member.vo.MemberVO;
+import util.MyBatisDao;
+
+public class MemberDaoImpl extends MyBatisDao implements IMemberDao {
+
+	private static IMemberDao memDao;
+	
+	private MemberDaoImpl() {}
+	
+	public static IMemberDao getInstance() {
+		
+		if(memDao == null) {
+			memDao = new MemberDaoImpl();
+		}
+		return memDao;
+	}
+	
+	@Override
+	public List<MemberVO> getMemberList() {
+		
+		return selectList("member.getMemberList");
+	}
+
+	@Override
+	public int insertMember(MemberVO mv) {
+		SqlSession sqlSession = MyBatisUtil.getInstance();
+		
+		int cnt = 0;
+		
+		try {
+			cnt = sqlSession.insert("member.insertMember", mv);
+			if(cnt > 0) {
+				sqlSession.commit();
+			}
+			
+		} catch (PersistenceException ex) {
+			sqlSession.rollback();
+			ex.printStackTrace();
+		}finally {
+			sqlSession.close();
+		}
+		
+		
+		return cnt;
+	}
+	@Override
+	public MemberVO loginChk(MemberVO login) {
+		
+		SqlSession sqlSession = MyBatisUtil.getInstance(true);
+		
+		MemberVO mv = null;
+		
+		try {
+			
+			mv = sqlSession.selectOne("member.loginChk", login);
+			
+		} catch (PersistenceException ex) {
+			ex.printStackTrace();
+		}finally {
+			sqlSession.close();
+		}
+		
+		
+		return mv;
+
+	}
+
+	@Override
+	public MemberVO searchMember(String memId) {
+		return selectOne("member.searchMember", memId);
+	}
+
+	
+}

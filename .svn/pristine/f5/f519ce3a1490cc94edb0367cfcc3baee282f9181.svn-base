@@ -1,0 +1,15 @@
+package admin.vo;
+
+import lombok.Data;
+
+@Data
+public class MvcReportVO {
+	private int mvcrpId; //코멘트신고PK
+	private String memId; //사용자PK
+	private int mvcId; //영화코멘트PK
+	private String mvcrpContent; //코멘트신고 내용
+	private String mvcrpYn; //코멘트신고 여부
+	private String mvc_memId; //코멘트 작성자 아이디
+	private String mvcContent; //코멘트 작성 내용
+	
+}

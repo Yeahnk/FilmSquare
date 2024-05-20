@@ -1,0 +1,48 @@
+package admin.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.session.SqlSession;
+
+import admin.vo.MvcReportVO;
+import config.MyBatisUtil;
+
+
+
+
+public class AdminReportDaoImpl implements AdminReportDao{
+	
+	private static AdminReportDao adminReportDao;
+	
+	private AdminReportDaoImpl() {
+		
+	}
+	
+	public static AdminReportDao getInstance() {
+		if(adminReportDao == null) {
+			adminReportDao = new AdminReportDaoImpl();
+		}
+		
+		return adminReportDao;
+	}
+	
+	@Override
+	public List<MvcReportVO> reportList() {
+		List<MvcReportVO> MvcReportList = new ArrayList<MvcReportVO>();
+		
+		SqlSession sqlSession = MyBatisUtil.getInstance(true);
+		
+		try {
+			MvcReportList = sqlSession.selectList("adminReport.reportList");
+			
+		} catch (PersistenceException e) {
+			e.printStackTrace();
+		}finally {
+			sqlSession.close();
+		}
+		return MvcReportList;
+	}
+
+}

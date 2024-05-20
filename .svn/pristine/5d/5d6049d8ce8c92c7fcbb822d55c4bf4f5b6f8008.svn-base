@@ -1,0 +1,43 @@
+package member.controller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import member.servive.AtchFileServiceImpl;
+import member.servive.IAtchFileService;
+import member.servive.IMemberService;
+import member.servive.MemberServiceImpl;
+import member.vo.AtchFileVO;
+import member.vo.MemberVO;
+
+@WebServlet("/mypage.do")
+public class pfController extends HttpServlet {
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    // 멤버 기본정보
+	    MemberVO mv = (MemberVO) req.getSession().getAttribute("LOGIN_MEMBER");
+
+	    IMemberService memService = MemberServiceImpl.getInstance();
+	    
+	    // 멤버 프로필 사진 띄우기
+	    IAtchFileService fileService = AtchFileServiceImpl.getInstance();
+
+	    MemberVO memId = memService.searchMember(mv);
+	    
+	    // getMember() = 유저 아이디로 프로필 상세정보 가져오는 메서드
+	    AtchFileVO atchFileVO = fileService.getMember(memId);
+	    req.setAttribute("mv", mv);
+	    req.setAttribute("atchFileVO", atchFileVO);
+	    req.getRequestDispatcher("/views/member/mypage.jsp").forward(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doGet(req, resp);
+}
+}

@@ -1,0 +1,11 @@
+package movie.vo;
+
+import lombok.Data;
+
+@Data
+public class PosterVO {
+	private int posterId;
+	private String posterImg;
+	private int mvId;
+	
+}

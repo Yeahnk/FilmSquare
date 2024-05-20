@@ -1,0 +1,36 @@
+package movie.service;
+
+import java.util.List;
+
+import movie.dao.IMovieInfoDao;
+import movie.dao.MovieInfoDaoImpl;
+import movie.vo.MovieInfoVO;
+
+public class MovieInfoServiceImpl implements IMovieInfoService {
+
+	private static IMovieInfoService movieInfoService;
+
+	IMovieInfoDao movieInfoDao;
+	
+	private MovieInfoServiceImpl() {
+		
+		movieInfoDao = MovieInfoDaoImpl.getInstance();
+		
+	}
+	
+	public static IMovieInfoService getInstance() {
+		
+		if(movieInfoService == null) {
+			movieInfoService = new MovieInfoServiceImpl();
+		}
+		return movieInfoService;
+	}
+	
+	
+	
+	@Override
+	public List<MovieInfoVO> getMovieList(String kwd) {
+		return movieInfoDao.getMovieList(kwd);
+	}
+
+}

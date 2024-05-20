@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+
+
+	<select id="getMemberList" resultType="MemberVO">
+	
+		select * from member
+	
+	</select>
+	
+	
+<insert id="insertMember" parameterType="member.vo.MemberVO">
+    INSERT INTO member
+    (MEM_ID, MEM_NAME, MEM_PW, MEM_NCNM, MEM_EMAIL, MEM_TELNO, MEM_INUM)
+    VALUES (MEMBER_SEQ.NEXTVAL, #{memName}, #{memPw}, #{memNcnm}, #{memEmail}, #{memTelno}, #{memInum})
+</insert>
+
+
+	<select id="loginChk" resultType="member.vo.MemberVO">
+		
+		select mem_id memId,
+			   mem_pw memPw,
+			   mem_from memFrom,
+			   mem_name memName,
+			   mem_ncnm memNcnm,
+			   mem_email memEmail,
+			   mem_telno memTelno,
+			   mem_inum memInum,
+			   mem_intro memIntro,
+			   mem_ttime memTtime,
+			   mem_stopyn memStopyn,
+			   mem_delyn memDelyn
+		from member
+		where mem_email = #{memEmail}
+			and mem_pw = #{memPw}
+	</select>
+	
+	<select id ="getMember" parameterType="String" resultType="member.vo.AtchFileVO">
+	
+	SELECT 
+    mem_id AS memId,
+    memp_id as mempId,
+    memp_sn as mempSn,
+    memp_path as mempPath,
+    memp_stre_nm as mempStreNm,
+    memp_orgn_nm as memOrgnNm,
+    memp_extsn as mempExtsn,
+    memp_size as memSize
+    
+    FROM 
+    MEMBERPROFILE
+	
+	WHERE 
+    mem_id = #{memId}
+	
+	</select>
+	
+	<select id="searchMember" resultType="MemberVO">
+	  select * from MEMBERPROFILE where mem_id = #{memId}
+	</select>
+	
+</mapper>

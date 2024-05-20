@@ -1,0 +1,92 @@
+package movie.service;
+
+import java.util.List;
+
+import movie.dao.IMovieDetailDao;
+import movie.dao.MovieDetailDaoImpl;
+import movie.vo.MvGradeVO;
+import movie.vo.MvLaterVO;
+import movie.vo.MvcLikeVO;
+import movie.vo.ActorVO;
+import movie.vo.MvCollectionVO;
+import movie.vo.MovieInfoVO;
+import movie.vo.MvCommentVO;
+import movie.vo.PosterVO;
+import movie.vo.VodVO;
+
+public class MovieDetailServiceImpl implements IMovieDetailService{
+
+	static IMovieDetailDao movieDetailDao = MovieDetailDaoImpl.getInstance();
+	private static IMovieDetailService movieDetailService;
+	
+	private MovieDetailServiceImpl() {}
+	
+	public static IMovieDetailService getInstance() {
+		
+		if(movieDetailService == null) {
+			movieDetailService = new MovieDetailServiceImpl();
+		}
+		return movieDetailService;
+		
+	}
+	
+	@Override
+	public MovieInfoVO getMovieDetail(int mvId) {
+		return movieDetailDao.getMovieDetail(mvId);
+	}
+
+	@Override
+	public PosterVO getMoviePoster(int mvId) {
+		return movieDetailDao.getMoviePoster(mvId);
+	}
+
+	@Override
+	public MvGradeVO getMovieGrade(int mvId) {
+		return movieDetailDao.getMovieGrade(mvId);
+	}
+
+	@Override
+	public int laterInsert(MvLaterVO mlv) {
+		return movieDetailDao.laterInsert(mlv);
+	}
+
+	@Override
+	public boolean isAlreadyAdded(MvLaterVO mlv) {
+		return movieDetailDao.isAlreadyAdded(mlv);
+	}
+
+	@Override
+	public int cmtInsert(MvCommentVO cmtv) {
+		return movieDetailDao.cmtInsert(cmtv);
+	}
+
+	@Override
+	public List<ActorVO> getActorList(int mvId) {
+		return movieDetailDao.getActorList(mvId);
+	}
+
+	@Override
+	public List<VodVO> getVodList(int mvId) {
+		return movieDetailDao.getVodList(mvId);
+	}
+
+	@Override
+	public List<MvCollectionVO> getCltList(int mvId) {
+		return movieDetailDao.getCltList(mvId);
+	}
+
+	@Override
+	public List<MvCommentVO> getCmtList(int mvId) {
+		return movieDetailDao.getCmtList(mvId);
+	}
+
+	@Override
+	public int mvcLikeInsert(MvcLikeVO mvcLikev) {
+		return movieDetailDao.mvcLikeInsert(mvcLikev);
+	}
+
+	@Override
+	public int mvGradeInsert(MvGradeVO mvgv) {
+		return movieDetailDao.mvGradeInsert(mvgv);
+	}
+}

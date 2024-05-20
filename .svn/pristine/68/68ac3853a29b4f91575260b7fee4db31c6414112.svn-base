@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="movieGrade">
+
+	<select id="getGradeAvg" resultType="int" parameterType="int">
+	
+		select round(avg(mvg_rating)) from moviegrade where mv_id = #{mvId}
+	
+	</select>
+	
+	<select id="countAGrade" parameterType="MvGradeVO" resultType="int">
+		select count(*) from moviegrade where mem_id=#{memId} and mvg_rating = (#{mvgRating}/2)
+	</select>
+	
+	<select id="countAllGrade" parameterType="MvGradeVO" resultType="int">
+		select count(*) from moviegrade where mem_id=#{memId} and mvg_rating !=0
+	</select>
+	
+	<select id="countMostCommonGrade" parameterType="MvGradeVO" resultType="int">
+		SELECT c
+		FROM (
+		    SELECT COUNT(*) AS c
+    		FROM moviegrade
+  			  WHERE mem_id = #{memId} AND mvg_rating != 0
+    		GROUP BY mvg_rating
+    		ORDER BY c DESC
+		)
+		WHERE ROWNUM = 1
+	</select>
+
+	<select id="getGradeList" parameterType="MvGradeVO" resultType="movie.vo.GradeVOforYE">
+		select * from moviegrade where mem_id=#{memId} and mvg_rating = (#{mvgRating}/2)
+	</select>
+
+	<select id="getMyDateWatchedList" parameterType="MvGradeVO" resultType="movie.vo.GradeVOforYE">
+		SELECT mv_id, mem_id, mvg_date AS mvg_date
+		FROM moviegrade
+		WHERE mem_id = #{memId} AND mvg_date >= #{mvgDate} AND mvg_date &lt; #{mvgDate}+1
+
+		UNION
+
+		SELECT mv_id, mem_id, mvc_date AS mvg_date
+		FROM moviecomment
+		WHERE mem_id = #{memId} AND mvc_date >= #{mvgDate} AND mvc_date &lt; #{mvgDate}+1
+	</select>
+	
+	<select id="getAGradeByMvIdNMemId" parameterType="movie.vo.GradeVOforYE" resultType="movie.vo.GradeVOforYE">
+	
+	select * from moviegrade where mv_id = #{mvId} and mem_id =  #{memId} and rownum=1
+	
+	</select>
+	
+	
+
+</mapper>

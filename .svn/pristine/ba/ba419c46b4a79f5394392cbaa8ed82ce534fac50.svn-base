@@ -1,0 +1,22 @@
+package member.dao;
+
+import java.util.List;
+
+import member.vo.AtchFileVO;
+import member.vo.MemberVO;
+
+
+
+public interface IAtchFileDao {
+	public int insertAtchFile(AtchFileVO atchFileVO);
+	
+	public int insertAtchFileDetail(AtchFileVO atchFileVO);
+	
+	
+	public List<AtchFileVO> getAtchFileList(AtchFileVO atchFileVO);
+	
+	public AtchFileVO getAtchFileDetail(AtchFileVO atchFileVO);
+
+	public AtchFileVO getMember(MemberVO memId);
+	
+}

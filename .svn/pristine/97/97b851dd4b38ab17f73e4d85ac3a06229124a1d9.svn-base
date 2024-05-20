@@ -1,0 +1,22 @@
+package admin.service;
+
+import java.util.List;
+
+import member.vo.MemberVO;
+
+
+
+public interface AdminMboardService {
+
+	/**
+	 * DB에 존재하는 모든 회원 정보를 조회하기 위한 메서드
+	 * @return 모든 등록된 회원정보
+	 */
+	public List<MemberVO> selectAll();
+	
+	/**
+	 * DB에 존재하는 블랙리스트를 조회하기 위한 메서드
+	 * @return 블랙리스트 회원 정보
+	 */
+	public List<MemberVO> blackList();
+}

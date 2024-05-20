@@ -1,0 +1,24 @@
+package admin.service;
+
+import java.util.List;
+import java.util.Map;
+
+import admin.vo.EditorBoardVO;
+import admin.vo.MvcReportVO;
+import member.vo.MemberVO;
+
+
+
+public interface IAdminEboardService {
+
+	/**
+	 * 에디터게시판 리스트 조회 메서드
+	 * @param map
+	 * @return 에디터게시판 리스트
+	 */
+	public List<EditorBoardVO> editorList(Map<String, Object> map);
+	
+
+
+
+}

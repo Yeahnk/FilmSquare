@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+<!-- (1) LoginWithNaverId Javascript SDK -->
+<script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+
+<!-- (2) LoginWithNaverId Javascript 설정 정보 및 초기화 -->
+<script>
+  var naverLogin = new naver.LoginWithNaverId(
+    {
+      clientId: "c8ehmm4C7KwZntvjz0zf",
+      callbackUrl: "http://localhost:8888/FilmSquare/naver_callback.html",
+      isPopup: false, /* 팝업을 통한 연동처리 여부 */
+      callbackHandle: true
+      /* callback 페이지가 분리되었을 경우에 callback 페이지에서는 callback처리를 해줄 수 있도록 설정합니다. */
+    }
+  );
+
+  /* (3) 네아로 로그인 정보를 초기화하기 위하여 init 호출 */
+  naverLogin.init();
+
+  /* (4) Callback의 처리. 정상적으로 Callback 처리가 완료될 경우 main page로 redirect(또는 Popup close) */
+  window.addEventListener('load', function() {
+    naverLogin.getLoginStatus(function(status) {
+      if(status) {
+        /* 필수적으로 받아야하는 프로필 정보가 있다면 callback처리 시점에 체크 */
+        /* !!!!!!!!리턴정보!!!!!!! */
+        var email = naverLogin.user.getEmail();
+//         var id = naverLogin.user.getId();
+//         var age = naverLogin.user.getAge();
+//         var birthday = naverLogin.user.getBirthday();
+//         var gender = naverLogin.user.getGender();
+//         var name = naverLogin.user.getName();
+//         var nickname = naverLogin.user.getNickName();
+//         var profileImage = naverLogin.user.getProfileImage();
+
+        // alert(email);
+        
+        console.log(naverLogin.user);
+        console.log(naverLogin.user.email);
+
+        if(email == undefined || email == null){
+          alert("이메일은 필수정보입니다. 정보제공을 동의해주세요.");
+          naverLogin.reprompt();
+          return;
+        }
+
+        // 추가부분 AJAX를 사용하여 이메일 정보를 java 전송
+        var req = new XMLHttpRequest();
+        req.open('POST', "/FilmSquare/naverLogin.do");
+        req.setRequestHeader('Content-Type', "application/x-www-form-urlencoded");
+        req.onreadystatechange = function(){
+          if(req.readyState == 4 && req.status == 200){
+//             console.log(">>>",req.responseText);
+			alert('요청성공');
+          }
+       
+        };
+        
+       
+        req.send("email=" + email);
+        
+
+        // window.location.replace("http://" + window.location.hostname + ( (location.port == "" || location.port == null) )) ;
+      } else {
+        console.log("callback 처리에 실패하였습니다.")
+      }
+    });
+  });
+
+  // https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=c8ehmm4C7KwZntvjz0zf&client_secret=zk5jf3G64U&access_token=AAAAOGpVN-ic1JAnk9WqjinBB0-tVt0mSB_AAFrxkonHNMMIM0G9JspTTTeCOxSNp9qmIxEBw6gPrn7i1f_EHc-mB8I &service_provider=NAVER
+</script>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="character">
+
+
+	<select id="getCharList" parameterType="String" resultType="CharacterVO">
+	
+	  SELECT person.*, personinfo.psinfo_key, personinfo.psinfo_val,
+	personimage.psi_src
+	FROM person
+	LEFT JOIN personinfo ON person.ps_id = personinfo.ps_id
+	LEFT JOIN personimage ON person.ps_id = personimage.ps_id
+	WHERE person.ps_name LIKE '%' || #{kwd} || '%'
+	
+	
+	</select>
+	
+	<!-- 인물사진 -->
+	<select id="searchImage" resultType="character.vo.PersonImageVO">
+		select a.ps_id,
+		       b.psi_id,  
+		       b.psi_src    
+		from person a
+		inner join personimage b on a.ps_id = b.ps_id
+		where a.ps_id = #{psId}
+	</select>
+
+	<!-- 인물정보 -->
+	<select id="searchInfo" resultType="character.vo.PersonInfoVO">
+		select a.ps_id, 
+		       a.ps_name,
+		       b.psinfo_key,
+		       b.psinfo_val        
+		from person a
+		inner join personinfo b on a.ps_id = b.ps_id
+		where a.ps_id = #{psId}
+	</select>
+	
+	<!-- 좋아요 -->
+	<select id="personLk" resultType="character.vo.PersonLikeVO">
+		select ps_id
+		, mem_id,
+		pslk_yn,
+        pslk_id,
+		count(*) count
+		from personlike 
+		where ps_id = #{psId}
+		and pslk_yn = 'Y'
+		group by ps_id
+		, mem_id,
+		pslk_yn, pslk_id
+	</select>
+	
+	
+	<insert id="createlike" parameterType="character.vo.PersonLikeVO">
+		insert into personlike(pslk_id, mem_id, ps_id, pslk_yn)
+    		values(PERSONLIKE_SEQ.nextVal, #{memId}, #{psId}, 'Y')
+		
+	</insert>
+	
+	<update id="updatelike" parameterType="character.vo.PersonLikeVO">
+		update personlike 
+		set pslk_yn = 'N'  
+		where mem_id = #{memId} and ps_id = #{psId}
+	</update>
+	
+	
+	
+
+
+
+</mapper>

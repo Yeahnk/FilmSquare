@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+
+	<select id="getAFile" parameterType="String" resultType="member.vo.AtchFileVO">
+		select * from MEMBERPROFILE where mem_id= #{memId}
+	</select>
+
+	<select id="getMemberList" resultType="MemberVO">
+	
+		select * from member
+	
+	</select>
+	
+	<select id="getAMember" parameterType="MemberVO" resultType="MemberVO">
+		select * from member where mem_id=#{memId}
+	</select>
+	
+<insert id="insertMember" parameterType="member.vo.MemberVO">
+    INSERT INTO member
+    (MEM_ID, MEM_NAME, MEM_PW, MEM_NCNM, MEM_EMAIL, MEM_TELNO, MEM_INUM)
+    VALUES (MEMBER_SEQ.NEXTVAL, #{memName}, #{memPw}, #{memNcnm}, #{memEmail}, #{memTelno}, #{memInum})
+</insert>
+
+	<insert id="kakaoInsert" parameterType="member.vo.MemberVO">
+		insert into member (mem_id, mem_email, mem_from, mem_ncnm, mem_inum, mem_name, mem_telno)
+		values(MEMBER_SEQ.NEXTVAL, #{memEmail}, #{memFrom}, #{memNcnm}, #{memInum}, #{memName}, #{memTelno})
+	</insert>
+
+	<select id="emailChk" resultType="member.vo.MemberVO">
+	  select * from member where mem_email = #{memEmail}
+	</select>
+	
+	<select id="searchInfo" resultType="member.vo.MemberVO">
+	  select * from member where mem_email = #{memEmail}
+	</select>
+	
+	
+	
+	
+
+	<select id="loginChk" resultType="member.vo.MemberVO">
+		
+		select *
+		from member
+		where mem_email = #{memEmail}
+			and mem_pw = #{memPw}
+	</select>
+	
+	<select id ="getMember" parameterType="String" resultType="member.vo.AtchFileVO">
+	
+	SELECT 
+    mem_id AS memId,
+    memp_id as mempId,
+    memp_sn as mempSn,
+    memp_path as mempPath,
+    memp_stre_nm as mempStreNm,
+    memp_orgn_nm as memOrgnNm,
+    memp_extsn as mempExtsn,
+    memp_size as memSize
+    
+    FROM 
+    MEMBERPROFILE
+	
+	WHERE 
+    mem_id = #{memId}
+	
+	</select>
+	
+	<select id="searchMember" resultType="MemberVO">
+	  select * from MEMBERPROFILE where mem_id = #{memId}
+	</select>
+	
+	<select id="schMember" resultType="MemberVO">
+	  select * from MEMBERPROFILE where mem_id = #{memId}
+	</select>
+	
+	
+	<update id="updateIntro" parameterType="member.vo.MemberVO">
+	 UPDATE MEMBER SET MEM_INTRO=#{memIntro} WHERE MEM_ID=#{memId}
+	</update>
+	
+	
+	<update id="updateNic" parameterType="member.vo.MemberVO">
+	    UPDATE MEMBER 
+	    SET MEM_NCNM=#{memNcnm}
+	    WHERE MEM_ID=#{memId}
+	</update>
+	
+
+
+
+<insert id="insertFile" parameterType="member.vo.AtchFileVO">
+    <selectKey keyProperty="mempId" resultType="int" order="BEFORE">
+        select MEMBERPROFILE_SEQ.nextval from dual
+    </selectKey>
+  
+    INSERT INTO MEMBERPROFILE (
+          MEMP_ID,
+          MEM_ID
+         
+      ) VALUES ( #{mempId}, #{memId})
+</insert>
+	
+<update id="updateAtch" parameterType="member.vo.AtchFileVO">
+<!-- INSERT INTO MEMBERPROFILE (
+    MEMP_SN,
+    MEMP_PATH,
+    MEMP_STRE_NM,
+    MEMP_ORGN_NM,
+    MEMP_EXTSN,
+    MEMP_SIZE
+) VALUES (
+    #{MempSn},
+    #{MempPath},
+    #{MempStreNm},
+    #{MempOrgnNm},
+    #{MempExtsn},
+    #{MempSize}
+) -->
+
+
+UPDATE MEMBERPROFILE
+SET
+MEMP_SN=#{mempSn},
+MEMP_PATH=#{mempPath},
+MEMP_STRE_NM=#{mempStreNm},
+MEMP_ORGN_NM=#{mempOrgnNm},
+MEMP_EXTSN=#{mempExtsn},
+MEMP_SIZE=#{mempSize}
+WHERE MEM_ID=#{memId}
+
+</update>
+
+	<!-- 등록된 프로필이 있는지 확인 -->
+	<select id="exist" parameterType="String" resultType="int">
+	  select count(*) from MEMBERPROFILE where mem_id = #{memId}
+	</select>
+
+</mapper>

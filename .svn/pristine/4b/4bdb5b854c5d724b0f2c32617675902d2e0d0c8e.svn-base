@@ -1,0 +1,220 @@
+
+<%@page import="member.vo.MemberVO"%>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+
+	List<MemberVO> memberList =(List<MemberVO>)request.getAttribute("memberList");
+	
+	String msg = session.getAttribute("msg") == null ? ""
+			: (String)session.getAttribute("msg");
+	session.removeAttribute("msg");
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원 조회</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+table {
+/*   table-layout: fixed; */
+}
+table, th, tr {
+  text-align: center;
+}
+
+.pager {
+  float: left;
+}
+#pageArea {
+  display: flex;
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+	<h1>회원 조회</h1>
+	<h3>회원을 조회합니다.</h3>
+<div class="col-sm-8 text-left"> 
+
+<!-- 리스트출력 영역 start -->
+ <div id="listArea">
+  	<table class="table table-hover">
+	    <thead>
+	      <tr>
+			<th>순번</th>
+			<th>이메일</th>
+			<th>이름</th>
+			<th>닉네임</th>
+			<th>전화</th>
+			<th>생년월일</th>
+			<th>성별</th>
+			<th>신고건수</th>
+			<th>관리</th>
+		</tr>
+		</thead>
+		<tbody>
+<%
+	if(memberList.size()==0){
+		
+%>	
+		<tr>
+			<td colspan="8">회원 정보가 존재하지 않습니다.</td>
+		
+		</tr>
+<%
+	}else{
+		
+		for(MemberVO mv : memberList){
+		
+%>		
+		<tr>
+			<td id=BMemId><%=mv.getMemId() %></td>
+			<td><%=mv.getMemEmail() %></td>
+			<td><%=mv.getMemName() %></td>
+			<td><%=mv.getMemNcnm() %></td>
+			<td><%=mv.getMemTelno() %></td>
+			<td><%=mv.getMemBirth() %></td>
+			<td><%=mv.getMemMW() %></td>
+			<td><a href="./blackList/detail.do?memId=<%=mv.getMemId()%>"><%=mv.getReportCount() %></a></td>
+			<td><!-- 모달 버튼 -->
+  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" data-backdrop="static">수정</button></td>
+		</tr>
+<%
+		}
+	}
+%>
+ 		</tbody>
+	  </table>
+	 </div>
+	 
+	 <!-- 모달 영역 시작 -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- 모달 컨텐츠 -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">블랙리스트에 추가하시겠습니까?</h4>
+        </div>
+        <div class="modal-body">
+          <!-- 예 버튼 -->
+        <button type="button" class="btn btn-primary" onclick="confirm()">예</button>
+        <!-- 아니오 버튼 -->
+        <button type="button" class="btn btn-default" data-dismiss="modal">아니오</button>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+        </div> -->
+      </div>
+      
+    </div>
+  </div>
+	 
+	<!-- 페이징 영역 start -->		
+	<div id="pageArea">
+		
+		<ul class="pager">
+		  <li class="prev"><a href="#">Prev</a></li>
+		</ul>
+		
+		<ul class="pagination pager">
+		<%
+			int sPage = (int)request.getAttribute("sPage");
+			int ePage = (int)request.getAttribute("ePage");
+			int cPage = (int)request.getAttribute("cPage");
+	
+			for(int i=sPage; i<=ePage; i++){
+				//페이지번호 활성화 처리
+				if(cPage == i){
+		%>
+		  <li class="active"><a href="#"><%=i %></a></li>
+		<%			
+				}else{
+		%>
+		  <li><a href="#"><%=i %></a></li>
+		<%
+				}
+			}//for end %>
+		</ul>
+		
+		<ul class="pager">
+		  <li class="next"><a href="#">Next</a></li>
+		</ul>
+	</div>
+	<!-- 페이징 영역 end -->		
+</div>
+
+<script>
+	$('.pagination li').on('click',function(){
+// 		alert( $(this).text() );
+		location.href="/FilmSquare/admin/mboard/list.do?page=" + $(this).text();
+	});
+	
+	$('.next').on('click',function(){
+// 		alert( parseInt($('.pagination').children().last().text()) +1 );
+		currentPage = parseInt($('.pagination').children().last().text()) +1;
+		
+		//현재 페이지가 totalPage보다 클때 페이지정보를 넘기지 않음
+		if(<%=request.getAttribute("ttPage")%> < currentPage) return;
+		location.href="/FilmSquare/admin/mboard/list.do?page=" + currentPage;
+	});
+	
+	$('.prev').on('click',function(){
+		
+		currentPage = parseInt($('.pagination').children().first().text()) -1;
+		//현재페이지가 0보다 작거나 같을 때
+		if(currentPage <= 0) return;
+		location.href="/FilmSquare/admin/mboard/list.do?page=" + currentPage;
+	});
+
+
+	/* 모달  */
+
+    // 예 버튼을 클릭했을 때 실행되는 함수
+   function confirm() {
+    // 여기에 예 버튼을 클릭했을 때의 동작을 구현
+    // 예를 들어, 어떤 작업을 수행하거나 서버로 요청을 보낼 수 있음
+    var memId = $('#BMemId').text();
+    console.log("memId값:",memId);
+
+    // AJAX를 이용하여 서버로 요청을 보냅니다.
+    $.ajax({
+        type: 'POST',  // 또는 'GET' 등 HTTP 메소드 선택
+        url: 'List/update.do',  // 서블릿의 URL
+        data: { memId : memId },  // 전송할 데이터, 필요한 경우에 데이터 추가
+        success: function(response) {
+            // 서버에서의 응답에 따른 동작을 구현
+            alert("정상처리되었습니다.");
+            
+            // 모달을 닫습니다.
+            $('#myModal').modal('hide');
+        },
+        error: function(error) {
+            // 에러 발생 시의 동작을 구현
+            console.error("에러 발생: " + error);
+        }
+    });	
+}	
+
+</script>	
+	
+	
+<%-- <%
+	if(msg.equals("성공")){
+%>
+<script>
+	alert('정상적으로 처리되었습니다.');
+</script>
+<%
+	}
+%> --%>
+</body>
+</html>

@@ -1,0 +1,40 @@
+package movie.vo;
+
+import java.time.LocalDate;
+
+import lombok.Data;
+
+@Data
+public class MovieInfoVO {
+	
+	private int mvId;
+	
+	private String mvTitle;
+	
+	private String mvUrl;
+	
+	private String mvKmid;
+	
+	private String mvKmseq;
+	
+	private String mvCode;
+	
+	private int mvRtime;
+	
+	private LocalDate mvRdate;
+	
+	private String mvDirector;
+	
+	private String mvRyear;
+	
+	private String mvPlot;
+	
+	private String mvGenre;
+	
+	private String mvAgelimit;
+	
+	private String mvEngtitle;
+	
+	private String mvNation;
+	
+}

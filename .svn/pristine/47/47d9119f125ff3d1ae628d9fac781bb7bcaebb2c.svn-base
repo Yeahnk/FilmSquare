@@ -1,0 +1,84 @@
+package comm.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.mail.Session;
+import javax.mail.Transport;
+import java.util.Properties;
+
+@WebServlet("/sendCode.do")
+public class YourVerificationServlet extends HttpServlet {
+	
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String userEmail = request.getParameter("memEmail");
+        int verificationCode = generateRandomCode();
+
+        // 이메일 전송 로직 추가
+        boolean emailSent = sendVerificationEmail(userEmail, verificationCode);
+
+        if (emailSent) {
+            // 세션에 코드 저장
+            HttpSession session = request.getSession();
+            session.setAttribute("verificationCode", verificationCode);
+
+            // 전송 성공 시 클라이언트에게 성공 응답 전송
+            PrintWriter out = response.getWriter();
+            out.print("success");
+            out.flush();
+        } else {
+            // 전송 실패 시 클라이언트에게 실패 응답 전송
+            PrintWriter out = response.getWriter();
+            out.print("failure");
+            out.flush();
+        }
+    }
+
+    private int generateRandomCode() {
+        // 랜덤한 6자리 숫자 생성
+        return (int) ((Math.random() * (999999 - 100000)) + 100000);
+    }
+
+    private boolean sendVerificationEmail(String toEmail, int verificationCode) {
+        // 이메일 서버 설정
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.host", "smtp.gmail.com");//맞춰야함
+        properties.put("mail.smtp.port", "587"); // 이메일 서버에 맞게 포트 변경
+
+        // 사용자 인증 정보
+        String username = "sohee0021@gmail.com";
+        String password = "hsej kycb wyrc zblr";
+
+        // 세션 생성
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                return new javax.mail.PasswordAuthentication(username, password);
+            }
+        });
+
+        // 메시지 생성
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(toEmail));
+            message.setSubject("이메일 인증 코드");
+            message.setText("인증 코드: " + verificationCode);
+
+            // 메시지 전송
+            Transport.send(message);
+            return true;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}

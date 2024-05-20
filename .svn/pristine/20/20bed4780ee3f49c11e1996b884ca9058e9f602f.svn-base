@@ -1,0 +1,83 @@
+package comm.dao;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import com.sun.javafx.collections.MappingChange.Map;
+
+import character.vo.PersonVO;
+import util.MyBatisDao;
+
+public class DBTest extends MyBatisDao {
+	
+	static int startIdx = 4501;
+	static int endIdx = 5000;
+	
+	List<PersonVO> psList = new ArrayList<PersonVO>();
+	List<PersonVO> sameNameList = new ArrayList<PersonVO>();
+	
+	public static void main(String[] args) {
+		
+		DBTest dt = new DBTest();
+		
+		int cnt = 0;
+		// person 테이블 처음부터 조회
+		for(int i= startIdx; i<endIdx; i++) {
+			HashMap<String, Object> map = new HashMap<>();
+			
+			System.out.println("ps id : " + i + "인 사람 조회 중");
+			
+			// 남길 마동석
+			PersonVO winPerson = dt.selectOne("dbTest.selectPersonList", i);
+			if(winPerson == null) continue;
+			map.put("winPerson", winPerson.getPsId());
+			
+			// 지워질 마동석들
+			List<PersonVO> losingPeople = dt.selectList("dbTest.selectSameNameList", winPerson);
+			
+			for(PersonVO losingPerson : losingPeople) {
+				map.put("losingPerson", losingPerson.getPsId());
+
+				// 지워질 마동석의 이미지를 가져오기
+				List<String> losePersonImageList = dt.selectList("dbTest.selectImages", losingPerson.getPsId());
+				
+				// 각 이미지가 남을 마동석에게 있는지 확인
+				for(String losePersonImage : losePersonImageList) {
+					
+					// 남을 마동석에게 지워질 마동석의 정보 이미 있는지 확인
+					if(dt.selectList("dbTest.selectImages", map).size() == 0) {
+						// 남을 마동석에게 해당 정보가 없으면 지워질 마동석의 정보 남을 마동석으로 바꿔주기
+						dt.update("dbTest.updateImages", map);				
+					}else {
+						// 남을 마동석에게 지워질 마동석의 정보가 이미 있으면 지워질 마동석의 정보 삭제
+						
+					}
+					// 진 마동석 삭제
+					dt.delete("dbTest.deleteLoser",map);
+					
+				}
+				
+				if(dt.selectList("dbTest.selectPsInfo", map).size() ==0) {
+					dt.update("dbTest.updatePsInfo", map);
+				}else {
+					// 진 마동석 삭제
+					dt.delete("dbTest.deleteLoser", map);
+				}
+				
+				dt.update("dbTest.updateActors", map);
+
+			
+			
+			
+			}
+			
+			
+			cnt ++;
+		}
+		System.out.println(cnt + " 개 작업완료");
+		
+	}
+	
+
+}

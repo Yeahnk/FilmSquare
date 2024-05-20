@@ -1,0 +1,186 @@
+<%@page import="movie.vo.PosterVO"%>
+<%@page import="movie.controller.PosterController"%>
+<%@page import="movie.vo.ReleasingMovieVO"%>
+<%@page import="movie.controller.ReleasingMovieController"%>
+<%@page import="movie.vo.ReleaseMovieVO"%>
+<%@page import="member.vo.MemberVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.time.DayOfWeek"%>
+<%@page import="java.time.LocalDate"%>
+<%@include file="../include/header.jsp"%>
+
+  <!-- ***** Main Banner Area Start ***** -->
+  <section class="section main-banner" id="top" data-section="section1">
+      <video autoplay muted loop id="bg-video">
+          <source src="" type="video/mp4" />
+      </video>
+
+      <div class="video-overlay header-text">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="caption">
+              <div class="main-button-red">
+              </div>
+          </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </section>
+  <!-- ***** Main Banner Area End ***** -->
+	<div>
+<%
+
+	ReleasingMovieController releasingMovieController = new ReleasingMovieController();
+	PosterController posterController = new PosterController();
+
+	int year = (int)request.getAttribute("year");
+	int yearBefore = (int)request.getAttribute("yearBefore");
+	int yearAfter = (int)request.getAttribute("yearAfter");
+	int month = (int)request.getAttribute("month");
+	int monthBefore = (int)request.getAttribute("monthBefore");
+	int monthAfter = (int)request.getAttribute("monthAfter");
+	int week = (int)request.getAttribute("week");
+	Calendar cal = (Calendar)request.getAttribute("cal");
+	List<ReleasingMovieVO> releaseList = (List<ReleasingMovieVO>) request.getAttribute("releaseList");
+	
+	Map<LocalDate, ReleasingMovieVO> movieMap = new HashMap();
+	
+	for(ReleasingMovieVO movie : releaseList) {
+		
+		movieMap.put(movie.getMvRdate(), movie);
+		
+	}
+	
+%>
+
+////////////////////////////////////////////////////////////////////////////////////
+
+		<a href="./ReleaseMovie.jsp?year=<%=yearBefore%>&month=<%=monthBefore%>"><</a>
+		<label><%=year%>. <%=month%></label>
+		<a href="./ReleaseMovie.jsp?year=<%=yearAfter%>&month=<%=monthAfter%>">></a>
+	</div>
+	<table border="0">
+		<tr>
+			<th>일</th>
+			<th>월</th>
+			<th>화</th>
+			<th>수</th>
+			<th>목</th>
+			<th>금</th>
+			<th>토</th>
+		</tr>
+		<tr>
+<%
+
+			// 1일 이전
+			for(int i=1; i<week; i++){
+				out.print("<td></td>");
+			}
+			
+			// 1일에서 말일
+			int lastDay = cal.getActualMaximum(Calendar.DATE);
+			for(int i=1; i<=lastDay; i++) {
+				LocalDate theDay = LocalDate.of(year, month, i);
+				
+				if(movieMap.containsKey(theDay)){ // 해당 날짜에 개봉 예정작 있는지 확인
+					ReleasingMovieVO todayMovie = movieMap.get(theDay);
+				
+					PosterVO poster = posterController.getPosterByMvId(todayMovie.getMvId());
+					out.print("<td><img id=\"" + theDay + "\" src = \""+ poster.getPosterImg +"\"></td>");
+					
+				}else{
+					out.print("<td>" + i + "</td>");
+				}
+				
+				if(lastDay != i && (++week)%7 == 1){
+					out.print("</tr><tr>");
+				}
+			}
+			
+			// 말일 이후
+			for(int i = (week-1)%7; i<6; i++) {
+				out.print("<td></td>");
+			}
+%>		
+		</tr>
+	</table>
+  
+
+  
+<%@include file="../include/footer.jsp"%>
+
+  <!-- Scripts -->
+  <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="assets/js/isotope.min.js"></script>
+    <script src="assets/js/owl-carousel.js"></script>
+    <script src="assets/js/lightbox.js"></script>
+    <script src="assets/js/tabs.js"></script>
+    <script src="assets/js/video.js"></script>
+    <script src="assets/js/slick-slider.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <script>
+        //according to loftblog tut
+        $('.nav li:first').addClass('active');
+
+        var showSection = function showSection(section, isAnimate) {
+          var
+          direction = section.replace(/#/, ''),
+          reqSection = $('.section').filter('[data-section="' + direction + '"]'),
+          reqSectionPos = reqSection.offset().top - 0;
+
+          if (isAnimate) {
+            $('body, html').animate({
+              scrollTop: reqSectionPos },
+            800);
+          } else {
+            $('body, html').scrollTop(reqSectionPos);
+          }
+
+        };
+
+        var checkSection = function checkSection() {
+          $('.section').each(function () {
+            var
+            $this = $(this),
+            topEdge = $this.offset().top - 80,
+            bottomEdge = topEdge + $this.height(),
+            wScroll = $(window).scrollTop();
+            if (topEdge < wScroll && bottomEdge > wScroll) {
+              var
+              currentId = $this.data('section'),
+              reqLink = $('a').filter('[href*=\\#' + currentId + ']');
+              reqLink.closest('li').addClass('active').
+              siblings().removeClass('active');
+            }
+          });
+        };
+
+        $('.main-menu, .responsive-menu, .scroll-to-section').on('click', 'a', function (e) {
+          e.preventDefault();
+          showSection($(this).attr('href'), true);
+        });
+
+        $(window).scroll(function () {
+          checkSection();
+        });
+    </script>
+        
+        
+
+
+
+
+</body>
+</html>

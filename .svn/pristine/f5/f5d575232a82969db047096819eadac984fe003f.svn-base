@@ -1,0 +1,24 @@
+package collection.vo;
+
+import java.time.LocalDate;
+
+import lombok.Data;
+
+@Data
+public class CollectionVO {
+	private int clId;
+	private String memId;
+	private String clTitle;
+	private LocalDate clDate;
+	private String clYn;
+	
+	
+	public CollectionVO(int clId) {
+		super();
+		this.clId = clId;
+	}
+	
+	
+	
+	
+}

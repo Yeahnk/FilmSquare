@@ -1,0 +1,28 @@
+package member.dao;
+
+import java.util.List;
+
+import member.vo.MemberVO;
+import util.MyBatisDao;
+
+public class MemberDaoImpl extends MyBatisDao implements IMemberDao {
+
+	private static IMemberDao memDao;
+	
+	private MemberDaoImpl() {}
+	
+	public static IMemberDao getInstance() {
+		
+		if(memDao == null) {
+			memDao = new MemberDaoImpl();
+		}
+		return memDao;
+	}
+	
+	@Override
+	public List<MemberVO> getMemberList() {
+		
+		return selectList("member.getMemberList");
+	}
+
+}

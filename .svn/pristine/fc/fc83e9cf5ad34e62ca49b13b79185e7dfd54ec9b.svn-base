@@ -1,0 +1,17 @@
+package collection.vo;
+
+import lombok.Data;
+
+@Data
+public class ClLikeVO {
+	private int cllkId;
+	private int clId;
+	private String memId;
+	private String cllkYn;
+	public ClLikeVO(int clId) {
+		super();
+		this.clId = clId;
+	}
+	
+	
+}

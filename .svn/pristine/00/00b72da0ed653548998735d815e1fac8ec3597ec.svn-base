@@ -1,0 +1,29 @@
+package admin.service;
+
+import admin.dao.AdminDao;
+import admin.dao.AdminDaoImpl;
+import admin.vo.AdminVO;
+
+public class AdminServiceImpl implements AdminService {
+	private static AdminService adminService;
+	private AdminDao adminDao;
+	
+	private AdminServiceImpl() {
+		adminDao = AdminDaoImpl.getInstance();	
+	}
+	
+	public static AdminService getInstance() {
+		
+		if(adminService == null) {
+			adminService = new AdminServiceImpl();
+		}
+		return adminService;
+	}
+	
+	@Override
+	public AdminVO getAdminLoginInfo(AdminVO adminLoginInfo) {
+		AdminVO av = adminDao.getAdminLoginInfo(adminLoginInfo);
+		return av;
+	}
+
+}

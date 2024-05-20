@@ -1,0 +1,103 @@
+package movie.dao;
+
+import movie.vo.MvGradeVO;
+import movie.vo.MvLaterVO;
+import movie.vo.MvcLikeVO;
+
+import java.util.List;
+
+import movie.vo.ActorVO;
+import movie.vo.MvCollectionVO;
+import movie.vo.MovieInfoVO;
+import movie.vo.MvCommentVO;
+import movie.vo.PosterVO;
+import movie.vo.VodVO;
+
+public interface IMovieDetailDao {
+	/**
+	 * 홈에서 영화를 선택하면 mvId를 받아 상세페이지에 해당 영화의 정보를 가져오기 위한 메서드
+	 * @param mvId
+	 * @return 선택한 MovieInfoVO
+	 */
+	public MovieInfoVO getMovieDetail(int mvId);
+	
+	/**
+	 * 홈에서 영화를 선택하면 mvId를 받아 상세페이지에 해당 영화의 포스터를 가져오기 위한 메서드
+	 * @param mvId
+	 * @return 선택한 MovieInfoVO
+	 */
+	public PosterVO getMoviePoster(int mvId);
+	
+	/**
+	 * 메인에서 영화를 선택하면 mvId를 받아 상세페이지에 해당 영화의 평균 별점을 가져오기 위한 메서드
+	 * @param mvId
+	 * @return
+	 */
+	public MvGradeVO getMovieGrade(int mvId);
+	
+	/**
+	 * 보고싶어요를 클릭하면 '나중에 볼 영화'에 등록되는 메서드
+	 * @param mlv
+	 * @return
+	 */
+	public int laterInsert(MvLaterVO mlv);
+
+	/**
+	 * 나중에 볼 영화에 이미 추가되었는지 검사하는 메서드
+	 * @param mlv
+	 * @return
+	 */
+	public boolean isAlreadyAdded(MvLaterVO mlv);
+	
+	/**
+	 * 영화 코멘트를 등록하는 메서드
+	 * @param cmtv
+	 * @return
+	 */
+	public int cmtInsert(MvCommentVO cmtv);
+	
+	/**
+	 * 해당 영화의 출연/제작 리스트를 불러오는 메서드
+	 * @param mvId
+	 * @return 출연/제작 리스트
+	 */
+	public List<ActorVO> getActorList(int mvId);
+	
+	/**
+	 * 해당 영화의 예고편 리스트를 불러오는 메서드
+	 * @param mvId
+	 * @return 예고편 리스트
+	 */
+	public List<VodVO> getVodList(int mvId);
+	
+	/**
+	 * 해당 영화가 포함된 컬렉션들을 불러오는 메서드
+	 * @param mvId
+	 * @return 파라미터 영화가 들어있는 컬렉션
+	 */
+	public List<MvCollectionVO> getCltList(int mvId);
+	
+	/**
+	 * 해당 영화에 작성한 코멘트들을 불러오는 메서드
+	 * @param mvId
+	 * @return 해당 영화 코멘트
+	 */
+	public List<MvCommentVO> getCmtList(int mvId);
+	
+	/**
+	 * 코멘트에 대한 좋아요를 누르면 데이터에 저장되는 메서드
+	 * @param mvcLikev
+	 * @return
+	 */
+	public int mvcLikeInsert(MvcLikeVO mvcLikev);
+	
+
+	/**
+	 * 별을 클릭하면 영화에 대한 평가가 저장되는 메서드
+	 * @param mvgv
+	 * @return
+	 */
+	public int mvGradeInsert(MvGradeVO mvgv);
+
+
+}

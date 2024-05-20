@@ -1,0 +1,189 @@
+<%@page import="member.servive.MemberServiceImpl"%>
+<%@page import="member.servive.IMemberService"%>
+<%@page import="movie.vo.MovieInfoVO"%>
+<%@page import="movie.vo.MvPosterVO"%>
+<%@page import="member.vo.MemberVO"%>
+<%@page import="comment.vo.ReplyVO"%>
+<%@page import="java.util.List"%>
+<%@page import="movie.vo.MvCommentVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%   
+
+	MovieInfoVO mvv = (MovieInfoVO) request.getAttribute("mvDetail");
+	MvPosterVO pv = (MvPosterVO) request.getAttribute("mvPoster"); //영화 포스터
+	MvCommentVO cmtv = (MvCommentVO) request.getAttribute("cmtv");
+	List<ReplyVO> rList = (List<ReplyVO>) request.getAttribute("rList");
+	
+	// 세션에 로그인 정보 꺼내기
+	MemberVO m = new MemberVO();
+	m.setMemEmail("22b@g.kr");
+	m.setMemPw("Asdf!234");
+	IMemberService memService = MemberServiceImpl.getInstance();
+	MemberVO mv = memService.loginChk(m);
+// 	MemberVO mv = (MemberVO) request.getSession().getAttribute("LOGIN_MEMBER");
+
+%>  	    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>코멘트 상세 페이지</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div style="width: 100%; height: 100%; flex-direction: column; justify-content: flex-start; align-items: center; gap: 14px; display: inline-flex">
+    <div style="width: 1125px; height: 1000px; padding-left: 50px; padding-right: 50px; padding-top: 40px; padding-bottom: 40px; background: #F2F2F2; border-radius: 8px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 38px; display: flex">
+        <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 38px; display: inline-flex">
+            <img style="width: 248px; height: 360px; position: relative; box-shadow: 0px 0px 20px 4px rgba(0, 0, 0, 0.15)" src="<%=pv.getPosterImg() %>" />
+            <div style="flex: 1 1 0; align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
+                <div style="align-self: stretch; padding-top: 11px; padding-bottom: 11px; border-bottom: 1px #AFAFAF solid; justify-content: flex-start; align-items: center; gap: 32px; display: inline-flex">
+                    <img style="width: 111px; height: 110px; border-radius: 9999px" src="
+                    
+                                        <% //프로필 사진
+                    String mempPath = cmtv.getMempPath();
+                    if(mempPath == null) {
+                    %>
+                    	https://png.pngtree.com/png-vector/20191003/ourmid/pngtree-cyber-man-icon-isolated-on-abstract-background-png-image_1779333.jpg
+                    <%
+                    }else {
+                    	mempPath = cmtv.getMempPath().substring(cmtv.getMempPath().indexOf("images"));
+                    %>
+                    ./<%= mempPath%>
+                    <%
+                    }
+                    %>  
+                    
+                    " />
+                    <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
+                        <div style="color: #1F1F1F; font-size: 30px; font-family: Roboto; font-weight: 600; line-height: 22px; word-wrap: break-word"><%=cmtv.getMemNcnm() %></div>
+                        <div style="padding-left: 4px; padding-right: 4px; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
+                            <div style="color: #848485; font-size: 21px; font-family: Roboto; font-weight: 300; line-height: 22px; word-wrap: break-word"><%=cmtv.getMemIntro() %></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="align-self: stretch; flex: 1 1 0; padding-top: 2px; padding-bottom: 2px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
+                    <div style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex">
+                        <div style="color: black; font-size: 33px; font-family: Roboto; font-weight: 800; word-wrap: break-word"><%=mvv.getMvTitle() %></div>
+                        <div style="color: #848485; font-size: 23px; font-family: Nokora; font-weight: 300; line-height: 24px; word-wrap: break-word"><%=cmtv.getMvcRegdt() %></div>
+                    </div>
+                    <div style="align-self: stretch; flex: 1 1 0; color: black; font-size: 22px; font-family: Roboto; font-weight: 400; line-height: 24px; word-wrap: break-word"><%=cmtv.getFullContent() %></div>
+                </div>
+            </div>
+        </div>
+        <div style="align-self: stretch; height: 200px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+            <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 8px; padding-bottom: 8px; border-top: 1px #AFAFAF solid; border-bottom: 1px #AFAFAF solid; justify-content: space-between; align-items: flex-start; display: inline-flex">
+                <div style="height: 22px; justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
+                    <div style="color: #787878; font-size: 17px; font-family: Roboto; font-weight: 400; line-height: 22px; word-wrap: break-word">좋아요 <%=cmtv.getMvcLikeCnt() %></div>
+                    <div style="color: #787878; font-size: 17px; font-family: Roboto; font-weight: 400; line-height: 22px; word-wrap: break-word">댓글 <%=cmtv.getMvcReplyCnt() %></div>
+                </div>
+                <div style="justify-content: flex-start; align-items: flex-start; gap: 40px; display: flex">
+                    <div style="padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                        <div style="width: 13.87px; height: 14.25px; background: #787878"></div>
+                        <div style="color: #787878; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19px; word-wrap: break-word">좋아요</div>
+                    </div>
+                    <div style="padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                        <div style="width: 13.50px; height: 13.50px; background: #787878"></div>
+                        <div style="color: #787878; font-size: 16px; font-family: Roboto; font-weight: 400; line-height: 19px; word-wrap: break-word">댓글</div>
+                    </div>
+                </div>
+            </div>
+            <div style="align-self: stretch; height: 200px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
+        <!-- 댓글 입력 폼 시작 -->
+        <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 8px; padding-bottom: 8px; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
+        <input type="text" id="mvcreContent" placeholder="댓글을 입력하세요" style="flex: 1; height: 34px; font-size: 17px; font-family: Roboto; font-weight: 400; line-height: 22px; border: 1px #AFAFAF solid; border-radius: 4px; padding: 8px; box-sizing: border-box;"/>
+    <button type="button" onclick="replyInsert(<%=mv.getMemId() %>,<%=cmtv.getMvcId() %>, $('#mvcreContent').val())" style="background-color: #888888; color: white; border: none; border-radius: 4px; padding: 8px 16px; font-size: 17px; cursor: pointer;">댓글 등록</button>
+        </div>
+    <!-- 댓글 입력 폼 끝 -->
+            <!-- 댓글 시작 -->
+            <%
+            int max = Math.min(rList.size(),10);
+            for(int i=0; i<max; i++) {
+            
+            %>
+            <div style="align-self: stretch; padding-left: 16px; padding-right: 16px; padding-top: 8px; padding-bottom: 8px; justify-content: flex-start; align-items: flex-start; gap: 76px; display: inline-flex">
+                <div style="height: 34px; justify-content: flex-start; align-items: center; gap: 16px; display: flex">
+                    <img style="width: 35px; height: 34px; border-radius: 9999px; border: 1px #4B4B4B solid" src="
+                   
+                      <% //프로필 사진
+                    if(rList.get(i).getMempStreNm() == null) {
+                    %>
+                    	https://png.pngtree.com/png-vector/20191003/ourmid/pngtree-cyber-man-icon-isolated-on-abstract-background-png-image_1779333.jpg
+                    <%
+                    }else {
+                    
+                    %>
+                    ./images/pf/<%=rList.get(i).getMempStreNm() %>
+                    <%
+                    }
+                    %>  
+      
+                    " />
+                    <div style="color: black; font-size: 20px; font-family: Roboto; font-weight: 600; line-height: 22px; word-wrap: break-word"><%=rList.get(i).getMemNcnm() %></div>
+                    <div style="color: #787878; font-size: 17px; font-family: Roboto; font-weight: 400; line-height: 22px; word-wrap: break-word"><%=rList.get(i).getMvcreContent() %></div>
+                    <div style="color: #787878; font-size: 15px; font-family: Roboto; font-weight: 400; line-height: 22px; word-wrap: break-word"><%=rList.get(i).getMvcrecDate() %></div>
+                </div>
+            </div><!-- 댓글 끝 -->
+            <%} %>
+            
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+////// 댓글 등록
+
+function replyInsert(memId, mvcId, mvcreContent) {
+	console.log(memId+mvcId+mvcreContent);
+    // Ajax로 데이터 전송
+    $.ajax({
+        type: "POST",
+        url: "<%=request.getContextPath() %>/replyInsert.do",
+        data: {
+            memId: memId,
+            mvcId: mvcId,
+            mvcreContent: mvcreContent
+        },
+        success: function(response) {
+            // 성공 시 실행할 코드
+            alert("댓글이 등록되었어요.");
+            // 여기에서 화면 갱신 또는 새로운 댓글 추가 등의 동작을 수행할 수 있습니다.
+            // 예를 들어, 화면 갱신을 위해 페이지 새로고침
+            location.reload();
+        },
+        error: function(error) {
+            // 실패 시 실행할 코드
+            alert("댓글 등록에 실패했어요.", error);
+        }
+    });
+}
+
+
+////////// 좋아요 버튼
+
+function mvcLikeInsert(memId, mvcId) {
+    // Ajax로 dopost 방식으로 데이터 전송
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "<%=request.getContextPath() %>/mvcLikeInsert.do",
+        data: { memId: memId, mvcId: mvcId },
+        success: function(response) {
+            // 성공 시 실행할 코드
+            alert("이 코멘트에 '좋아요'를 했어요.");
+        	location.reload();
+        },
+        error: function(error) {
+            // 실패 시 실행할 코드
+            alert("Ajax 요청 실패", error);
+        }
+    });
+}
+
+
+</script>
+</body>
+</html>

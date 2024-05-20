@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+img {
+	height: 80px;
+}
+</style>
+</head>
+<body>
+
+	<a href="javascript:kakaoLogin()"><img src="../../images/kakao.PNG"
+		alt="카카오"></a>
+	<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+	<script>
+    Kakao.init("ca85312fd4718194ae795cede6884ff8");
+
+    function kakaoLogin() {
+    		
+      	Kakao.Auth.login({
+//      	scope:'profile_nickname, profile_image, account_email, name, gender, age_range, birthday, phone_number, friends',
+        success: function(authObj) {
+        	console.log(authObj);
+        	Kakao.API.request({
+            	url:'/v2/user/me',
+//          	success: res => {
+//              	const kakao_account = res.kakao_account;
+//              	console.log(kakao_account);
+//              	const kakao_account_mail = res.kakao_account.email;
+//              	console.log(res.kakao_account.email);
+				success: function(resp){
+					let info = resp.kakao_account;
+					console.log(info);
+// 					let id = resp.id;
+// 					age_range birthday account_email profile_image gender profile_nickname name phone_number friends
+					let data = {
+						token: Kakao.Auth.getAccessToken(),
+// 						memId: id,
+
+						memNcnm: info.profile.nickname,
+						memBirthday: info.birthday,
+						memBirthyear: info.birthyear,
+						memGender: info.gender,
+						memName: info.name, 
+						memEmail: info.email,
+						memTelno: info.phone_number,
+						memFrom: "kakao"
+					};
+					
+					let ajax = new XMLHttpRequest();
+					
+					ajax.open('POST', '/FilmSquare/kakaoLogin.do');
+					ajax.setRequestHeader('Content-Type','application/json');
+					
+					ajax.onload = function(){
+						if(ajax.status == 200){
+// 							console.log(200);		
+						}else{
+// 							console.log(2123231200);
+						}
+						
+					
+					}
+					console.log(data);
+					ajax.send(JSON.stringify(data));
+				}
+				
+          });
+        }
+      });
+    }
+
+    
+
+
+
+    
+
+
+  </script>
+
+
+
+
+
+</body>
+
+</html>

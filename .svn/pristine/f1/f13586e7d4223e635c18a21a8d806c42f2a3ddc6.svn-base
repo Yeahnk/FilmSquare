@@ -1,0 +1,119 @@
+<%@page import="member.vo.MemberVO"%>
+<%@page import="member.vo.AtchFileVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%
+	
+	MemberVO mv = (MemberVO) request.getAttribute("mv");
+
+	AtchFileVO atchFileVO = (AtchFileVO) request.getAttribute("atchFileVO");
+
+%>    
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>마이 페이지</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* 그리드의 높이 설정하여 .sidenav이 100%가 될 수 있도록 (필요에 따라 조정) */
+    .row.content { height: 1500px }
+    
+    /* 회색 배경색과 100% 높이 설정 */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    .profile-pic {
+      text-align: center;
+      padding: 20px 0;
+    }
+    
+    /* 검은 배경색, 흰 텍스트 및 일부 패딩 설정 */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    
+    /* 작은 화면에서 sidenav 및 그리드의 높이를 '자동'으로 설정 */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+  </style>
+</head>
+<body>
+	<form action="./mypage.do" method="post" enctype="multipart/form-data">
+	<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+      <div class="profile-pic">
+       <%
+      	String profileImg = "";
+      	if(atchFileVO.getMempId() != null) {
+      		profileImg = atchFileVO.getMempPath();
+      	} else {
+      		profileImg = "./images/짱구포스터.PNG";
+      	}
+      %>
+        <!-- 여기에 프로필 사진을 추가하세요 -->
+        [<%=profileImg %>]
+        <img src="<%=profileImg %>" alt="프사" class="img-circle" width="150">
+      </div>
+      <h4>이름</h4>
+      <ul class="nav nav-pills nav-stacked">
+     
+        <li class="active"><a href="#section1">프로필</a></li>
+        <li><a href="#section2">게시물</a></li>
+        <li><a href="#section3">사진</a></li>
+        <li><a href="#section4">친구들</a></li>
+      </ul><br>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="검색...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-sm-9">
+      <h2>당신의 프로필</h2>
+	  <tr>
+	  <td>프로필 변경</td>
+	 <td><input type="file" name="atchFile"></td>
+	 </tr>
+	<hr>
+      <h4><small>최근 게시물</small></h4>
+
+      <hr>
+
+      <h4>당신의 사진</h4>
+
+      <hr>
+
+      <h4>당신의 친구들</h4>
+
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid">
+  <p>푸터 텍스트</p>
+</footer>
+	</form>
+</body>
+</html>

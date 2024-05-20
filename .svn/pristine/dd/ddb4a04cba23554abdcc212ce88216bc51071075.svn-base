@@ -1,0 +1,29 @@
+package collection.vo;
+
+import java.util.List;
+import java.util.Map;
+
+import lombok.Data;
+import member.vo.AtchFileVO;
+
+@Data
+public class CollParamContainerVO {
+	private String collTitle;
+	private String memNcnm;
+	private AtchFileVO memProfile;
+	private List<Map<String, Object>> movieMap;
+	
+	
+	
+	public CollParamContainerVO(String collTitle, String memNcnm, AtchFileVO memProfile,
+			List<Map<String, Object>> movieMap) {
+		super();
+		this.collTitle = collTitle;
+		this.memNcnm = memNcnm;
+		this.memProfile = memProfile;
+		this.movieMap = movieMap;
+	}
+	
+	
+	
+}

@@ -1,0 +1,28 @@
+package collection.service;
+
+import collection.dao.ClLikeDaoImpl;
+import collection.dao.IClLikeDao;
+
+public class ClLikeServiceImpl implements IClLikeService {
+
+	IClLikeDao dao;
+	
+	private static IClLikeService singleTon;
+	
+	private ClLikeServiceImpl() {
+		dao = ClLikeDaoImpl.getInstance();
+	};
+	
+	public static IClLikeService getInstance() {
+		if( singleTon ==null) {
+			singleTon = new ClLikeServiceImpl();
+		}
+		return singleTon;
+	}
+
+	@Override
+	public int countLike(int clId) {
+		return dao.countLike(clId);
+	}
+	
+}

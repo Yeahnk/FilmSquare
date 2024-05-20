@@ -1,0 +1,17 @@
+package admin.service;
+
+import java.util.List;
+
+import admin.vo.MvcReportVO;
+
+
+
+public interface AdminReportService {
+
+	/**
+	 * DB에 존재하는 미처리 신고글를 조회하기 위한 메서드
+	 * @return 미처리 신고글
+	 */
+	public List<MvcReportVO> reportList();
+	
+}

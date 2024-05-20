@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+	<properties resource="db.properties" />
+
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+
+
+	<typeAliases>
+		<typeAlias type="member.vo.MemberVO" alias="MemberVO"/>
+		<typeAlias type="movie.vo.MovieInfoVO" alias="MovieInfoVO"/>
+		<typeAlias type="movie.vo.ReleasingMovieVO" alias="ReleasingMovieVO"/>
+	</typeAliases>
+
+
+	<environments default="dev">
+		<environment id="dev">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+				<property name="poolMaximumActiveConnections" value="2"/> <!-- 활성화된 최대 커넥션수 -->
+				<property name="poolMaximumIdleConnections" value="2"/> <!-- 유휴상태에서 최대 커넥션수 -->
+			</dataSource>
+		</environment>
+
+	</environments>
+
+
+	<mappers>
+		<mapper resource="mappers/member.xml" />
+		<mapper resource="mappers/admin.xml"/>
+		<mapper resource="mappers/adminMember.xml"/>
+		<mapper resource="mappers/adminReport.xml"/>
+		<mapper resource="mappers/adminEditor.xml"/>
+		<mapper resource="mappers/adminQna.xml"/>
+		<mapper resource="mappers/movie.xml"/>
+		<mapper resource="mappers/releasingMovie.xml"/>
+	</mappers>
+
+
+</configuration>

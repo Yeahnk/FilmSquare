@@ -1,0 +1,9 @@
+package movie.vo;
+
+
+public class PosterVO {
+	private int posterId;
+	private String posterImg;
+	private int mvId;
+	
+}

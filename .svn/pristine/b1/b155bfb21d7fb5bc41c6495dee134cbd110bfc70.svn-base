@@ -1,0 +1,7 @@
+package movie.service;
+
+public interface IMovieGradeService {
+
+	int getGradeAvg(int mvId);
+
+}

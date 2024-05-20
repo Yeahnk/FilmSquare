@@ -1,0 +1,99 @@
+<%@page import="admin.vo.AdminVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+    AdminVO av = (AdminVO) session.getAttribute("LOGIN_ADMIN");
+    if(av == null){
+        response.sendRedirect(request.getContextPath() + "/admin/login.do");
+        return;
+    }
+%>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>관리자 메인 페이지</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 1500px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+      <h4><%=av.getAdminId() %>님 로그인</h4>
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="./main.do">Home</a></li>
+        <li>회원관리</li>
+        <li><a href="./mboard/list.do">회원 조회</a></li>
+        <li><a href="./mboard/blackList.do">블랙리스트</a></li>
+        <li>신고관리</li>
+        <li><a href="./mvcReport/list.do">미처리 신고 조회</a></li>
+        <li>에디터 게시판</li>
+        <li><a href="#">글 등록</a></li>
+        <li><a href="./eboard/list.do">전체 글 조회</a></li>
+        <li>문의 관리</li>
+        <li><a href="./qboard/unList.do">미답변 문의 조회</a></li>
+        <li><a href="./qboard/list.do">전체 문의 조회</a></li>
+      </ul><br>
+      <div class="input-group">
+       <button onclick="logout()">로그아웃</button>
+ 
+   
+      </div>
+    </div>
+
+    <div class="col-sm-9">
+컨텐츠
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid">
+  <p>Footer Text</p>
+</footer>
+
+
+<script>
+    function logout() {
+        let result = confirm("로그아웃 하시겠습니까?");
+        if (result) {
+            window.location.href = '<%=request.getContextPath()%>/admin/logout.do';
+        } else {
+            // 사용자가 "취소"를 선택한 경우 또는 대화 상자를 닫은 경우
+            // 아무 작업도 필요하지 않음
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="movie">
+
+	<!-- 키워드 받아서 키워드가 포함된 영화 전체 출력 -->
+	<select id="getMovieList" parameterType="String" resultType="movieInfoVO">
+		
+		select * from movie 
+		where MV_TITLE like '%' || #{kwd} || '%'
+		
+	</select>
+	
+	<!-- mvId를 파라미터값으로 받아 해당 영화 상세 정보를 가져온다 -->
+	<select id="getMovieDetail" parameterType="Int" resultType="movieInfoVO">
+		
+		select * from movie 
+		where mv_id = #{mvId}
+		
+	</select>
+	
+	<!-- mvId를 파라미터값으로 받아 해당 영화 포스터 정보를 가져온다 -->
+	<select id="getMoviePoster" parameterType="Int" resultType="PosterVO">
+		
+		SELECT * FROM poster 
+		WHERE mv_id = #{mvId}
+		AND ROWNUM = 1
+		
+	</select>
+	
+	<!-- mvId를 파라미터값으로 받아 해당 영화 평균 별점 *10, 평론가 평균 별점 *10 정보를 가져온다 -->
+	<select id="getMovieGrade" parameterType="Int" resultType="MvGradeVO">
+		
+		<!-- SELECT ROUND(AVG(mvg_rating), 1)*10 AS gradeAvg
+		FROM MovieGrade
+		WHERE mv_id = #{mvId} -->
+		
+		
+		SELECT
+		    a.gradeAvg,
+		    b.GradeCAvg
+		FROM
+		    (SELECT ROUND(AVG(mvg_rating), 1) * 10 AS gradeAvg
+		    FROM MovieGrade
+		    WHERE mv_id = #{mvId}) a
+		JOIN
+		    (SELECT ROUND(AVG(mvg_rating), 1) * 10 AS GradeCAvg
+		    FROM MovieGrade
+		    WHERE mv_id = #{mvId}
+		    AND mem_id = (SELECT mem_id FROM member WHERE mem_from = '평론가')) b
+		ON 1=1
+		
+	</select>
+	
+	<insert id="laterInsert" parameterType="MvLaterVO">
+	insert into MOVIELATER (mvlater_id,mv_id,mem_id,mvlater_date)
+	values(MOVIELATER_num_seq.nextval,#{mvId},#{memId},sysdate)
+	</insert>
+
+<select id="isAlreadyAdded" resultType="java.lang.Boolean">
+    SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+    FROM MOVIELATER
+    WHERE mv_id = #{mvId} AND mem_id = #{memId}
+</select>
+
+
+
+
+
+
+</mapper>

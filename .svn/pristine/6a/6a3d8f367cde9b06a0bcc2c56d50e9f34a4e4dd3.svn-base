@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+	<properties resource="db.properties" />
+
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+
+
+	<typeAliases>
+		<typeAlias type="member.vo.MemberVO" alias="MemberVO"/>
+		<typeAlias type="comment.vo.ReplyVO" alias="ReplyVO"/>
+		<typeAlias type="comment.vo.CommentVO" alias="CommentVO"/>
+		<typeAlias type="movie.vo.MovieInfoVO" alias="MovieInfoVO"/>
+		<typeAlias type="movie.vo.ReleasingMovieVO" alias="ReleasingMovieVO"/>
+		<typeAlias type="movie.vo.MvLaterVO" alias="MvLaterVO" />
+		<typeAlias type="movie.vo.MvGradeVO" alias="MvGradeVO"/>		
+		<typeAlias type="movie.vo.PosterVO" alias="PosterVO"/>
+		<typeAlias type="character.vo.CharacterVO" alias="CharacterVO"/>
+		<typeAlias type="character.vo.PersonVO" alias="PersonVO"/>
+		<typeAlias type="character.vo.PersonInfoVO" alias="PersonInfoVO"/>
+		<typeAlias type="character.vo.PersonImageVO" alias="PersonImageVO"/>
+		<typeAlias type="movie.vo.MvCommentVO" alias="MvCommentVO"/>
+		<typeAlias type="movie.vo.ActorVO" alias="ActorVO"/>
+		<typeAlias type="movie.vo.VodVO" alias="VodVO"/>
+		<typeAlias type="collection.vo.CollectionVO" alias="CollectionVO"/>
+		<typeAlias type="collection.vo.CollcontentVO" alias="CollcontentVO"/>
+		<typeAlias type="collection.vo.ClLikeVO" alias="ClLikeVO"/>
+		<typeAlias type="movie.vo.MvCollectionVO" alias="MvCollectionVO"/>
+		<typeAlias type="movie.vo.MvcLikeVO" alias="MvcLikeVO"/>
+	</typeAliases>
+
+
+	<environments default="dev">
+		<environment id="dev">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+				<property name="poolMaximumActiveConnections" value="2"/> <!-- 활성화된 최대 커넥션수 -->
+				<property name="poolMaximumIdleConnections" value="2"/> <!-- 유휴상태에서 최대 커넥션수 -->
+			</dataSource>
+		</environment>
+
+	</environments>
+
+
+	<mappers>
+		<mapper resource="mappers/member.xml" />
+		<mapper resource="mappers/reply.xml" />
+		<mapper resource="mappers/admin.xml"/>
+		<mapper resource="mappers/adminMember.xml"/>
+		<mapper resource="mappers/adminReport.xml"/>
+		<mapper resource="mappers/adminEditor.xml"/>
+		<mapper resource="mappers/adminQna.xml"/>
+		<mapper resource="mappers/movie.xml"/>
+		<mapper resource="mappers/poster.xml"/>
+		<mapper resource="mappers/releasingMovie.xml"/>
+		<mapper resource="mappers/character.xml"/>
+		<mapper resource="mappers/collection.xml"/>
+		<mapper resource="mappers/collcontent.xml"/>
+		<mapper resource="mappers/clLike.xml"/>
+		<mapper resource="mappers/movieGrade.xml"/>
+		<mapper resource="mappers/dbTest.xml"/>
+		<mapper resource="mappers/comment.xml"/>
+	</mappers>
+
+
+</configuration>

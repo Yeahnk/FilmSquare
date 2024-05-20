@@ -1,0 +1,9 @@
+package admin.vo;
+
+import lombok.Data;
+
+@Data
+public class AdminVO {
+	private String adminId; //관리자PK
+	private String adminPw;	//관리자 비밀번호
+}

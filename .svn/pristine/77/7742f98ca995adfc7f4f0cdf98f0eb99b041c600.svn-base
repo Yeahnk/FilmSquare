@@ -1,0 +1,9 @@
+package movie.dao;
+
+import movie.vo.PosterVO;
+
+public interface IPosterDao {
+
+	PosterVO getPosterByMvId(int mvId);
+
+}

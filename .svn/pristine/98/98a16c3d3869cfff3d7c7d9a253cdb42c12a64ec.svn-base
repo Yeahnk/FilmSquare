@@ -1,0 +1,71 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="TemplateMo">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <title>FilmSquare</title>
+
+    <!-- 부트스트랩 사용 링크 -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CSS파일 목록 -->
+    <link rel="stylesheet" href="assets/css/fontawesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-edu-meeting.css">
+    <link rel="stylesheet" href="assets/css/owl.css">
+    <link rel="stylesheet" href="assets/css/lightbox.css">
+    <link rel="stylesheet" href="globals.css" />
+    <link rel="stylesheet" href="styleguide.css" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+    
+.top-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 13px 20px;
+  position: relative;
+}
+
+.top-bar .text-wrapper {
+  position: relative;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Actor-Regular", Helvetica;
+  font-weight: 400;
+  color: var(--white);
+  font-size: 33px;
+  letter-spacing: 0;
+  line-height: 33px;
+  white-space: nowrap;
+}
+    
+    
+    </style>
+  </head>
+  <body>
+ 
+<% 
+	MemberVO mv = (MemberVO)session.getAttribute("LOGIN_MEMBER"); 
+
+	if(mv != null && mv.getMemEmail() != null && !mv.getMemEmail().equals("")){
+	
+	String memId = mv.getMemId();
+	
+%>
+    <div class="top-bar">
+      <a href="" class="text-wrapper">FILM SQUARE</a>
+      <a href="" class="text-wrapper">CALENDAR</a>
+      <a href="" class="text-wrapper">MAP</a>
+      <a href="" class="text-wrapper">SEARCH</a>
+      <a href="" class="text-wrapper">JOIN</a>
+      <a href="" class="text-wrapper">LOG IN</a>
+    </div>

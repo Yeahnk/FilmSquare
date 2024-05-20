@@ -1,0 +1,47 @@
+package admin.service;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import admin.dao.IAdminEboardDao;
+import admin.vo.EditorBoardVO;
+import admin.vo.MvcReportVO;
+import admin.dao.AdminEboardDaoImpl;
+import member.vo.MemberVO;
+
+
+
+
+public class AdminEboardServiceImpl implements IAdminEboardService{
+
+	private static IAdminEboardService adminEboardService;
+	private IAdminEboardDao adminEboardDao;
+	
+	private AdminEboardServiceImpl() {
+		adminEboardDao = AdminEboardDaoImpl.getInstance();
+		
+	}
+	public static IAdminEboardService getInstance() {
+		
+		if(adminEboardService == null) {
+			adminEboardService = new AdminEboardServiceImpl();
+		}
+		return adminEboardService;
+	}
+	
+	@Override
+	public List<EditorBoardVO> editorList(Map<String, Object> map) {
+		List<EditorBoardVO> list = null;
+		try {
+			list = adminEboardDao.editorList(map);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+
+
+
+}

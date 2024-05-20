@@ -1,0 +1,23 @@
+package movie.dao;
+
+import util.MyBatisDao;
+
+public class MovieGradeDaoImpl extends MyBatisDao implements IMovieGradeDao {
+	
+	private static IMovieGradeDao singleTon;
+	
+	private MovieGradeDaoImpl() {};
+	
+	public static IMovieGradeDao getInstance() {
+		if( singleTon ==null ) {
+			singleTon = new MovieGradeDaoImpl();
+		}
+		return singleTon;
+	}
+
+	@Override
+	public int getGradeAvg(int mvId) {
+		return selectOne("movieGrade.getGradeAvg", mvId);
+	}
+
+}

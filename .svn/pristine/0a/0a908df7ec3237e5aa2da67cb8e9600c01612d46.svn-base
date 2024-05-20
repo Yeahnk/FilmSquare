@@ -1,0 +1,92 @@
+package movie.controller;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import movie.service.IReleasingMovieService;
+import movie.service.ReleasingMovieServiceImpl;
+import movie.vo.ReleasingMovieVO;
+
+public class ReleasingMovieController extends HttpServlet {
+
+	static IReleasingMovieService releasingMovieService = ReleasingMovieServiceImpl.getInstance();
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		Calendar cal = Calendar.getInstance();
+
+		// 시스템 오늘 날짜
+		int ty = cal.get(Calendar.YEAR);
+		int tm = cal.get(Calendar.MONTH) + 1;
+		int td = cal.get(Calendar.DATE);
+
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1;
+
+		// 파라미터 받기
+		String sy = req.getParameter("year");
+		String sm = req.getParameter("month");
+
+		if (sy != null) { // 넘어온 파라미터가 있으면
+			year = Integer.parseInt(sy);
+		}
+		if (sm != null) {
+			month = Integer.parseInt(sm);
+		}
+
+		cal.set(year, month - 1, 1);
+
+		int week = cal.get(Calendar.DAY_OF_WEEK);
+
+		int monthBefore = month - 1;
+		int yearBefore = year;
+		if (monthBefore == 0) {
+			monthBefore = 12;
+			yearBefore--;
+		}
+
+		int monthAfter = month + 1;
+		int yearAfter = year;
+		if (monthAfter == 13) {
+			monthAfter = 1;
+			yearAfter++;
+		}
+		
+		LocalDate calDate = LocalDate.of(year,month,1);
+		
+		
+		List<ReleasingMovieVO> releaseList = releasingMovieService.getReleaseList(calDate);
+		
+		req.setAttribute("year", year);
+		req.setAttribute("month", month);
+		req.setAttribute("week", week);
+		req.setAttribute("yearBefore", yearBefore);
+		req.setAttribute("monthBefore", monthBefore);
+		req.setAttribute("yearAfter", yearAfter);
+		req.setAttribute("monthAfter", monthAfter);
+		req.setAttribute("cal", cal);
+		req.setAttribute("releaseList", releaseList);
+
+		req.getRequestDispatcher("/views/ReleasingMovie.jsp").forward(req, resp);
+
+	}
+
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.doPost(req, resp);
+	}
+
+}

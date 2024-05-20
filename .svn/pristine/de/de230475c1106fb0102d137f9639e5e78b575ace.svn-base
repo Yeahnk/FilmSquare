@@ -1,0 +1,74 @@
+package character.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import character.service.CharacterServiceImpl;
+import character.service.ICharacterService;
+import character.vo.CharacterVO;
+import character.vo.PersonImageVO;
+import character.vo.PersonInfoVO;
+import character.vo.PersonLikeVO;
+
+
+@WebServlet("/personDetail.do")
+public class PersonDetail extends HttpServlet {
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 인물 정보  
+		
+		long psId = Long.parseLong(req.getParameter("psId"));
+		System.out.println(psId);
+		
+		ICharacterService charService = CharacterServiceImpl.getInstance();
+		
+		List<PersonInfoVO> psifList = charService.searchInfo(psId);
+		
+		
+		req.setAttribute("psifList", psifList);
+
+		
+		System.out.println(psifList);	
+		
+		// 인물 사진
+		
+		List<PersonImageVO> psiList = charService.searchImage(psId);
+		
+		req.setAttribute("psiList", psiList);
+		
+		System.out.println(psiList);
+
+		
+		
+		
+		// 좋아요 수 (리스트에 널값이 있어서 안되는거같음)
+//		List<PersonLikeVO> pslkList = charService.personLk(psId);
+//		
+//		req.setAttribute("pslkList", pslkList);
+//		
+//		System.out.println(pslkList);
+//		
+		req.getRequestDispatcher("/views/personDetail.jsp").forward(req, resp);
+		
+		
+		
+	}
+	
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	
+		
+		
+	
+	}
+	
+
+}

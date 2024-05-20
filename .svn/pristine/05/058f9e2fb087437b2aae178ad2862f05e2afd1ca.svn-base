@@ -1,0 +1,7 @@
+package collection.dao;
+
+public interface IClLikeDao {
+
+	int countLike(int clId);
+
+}

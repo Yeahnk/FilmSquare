@@ -1,0 +1,9 @@
+package movie.service;
+
+import movie.vo.PosterVO;
+
+public interface IPosterService {
+
+	PosterVO getPosterByMvId(int mvId);
+
+}

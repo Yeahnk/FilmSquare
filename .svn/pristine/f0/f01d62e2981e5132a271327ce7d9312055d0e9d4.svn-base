@@ -1,0 +1,26 @@
+package character.dao;
+
+import java.util.List;
+
+import character.vo.CharacterVO;
+import util.MyBatisDao;
+
+public class CharacterDaoImpl extends MyBatisDao implements ICharacterDao {
+	
+	private static ICharacterDao charDao;
+	
+	private CharacterDaoImpl() {}
+	
+	public static ICharacterDao getInstance() {
+		if(charDao == null) {
+			charDao = new CharacterDaoImpl();
+		}
+		return charDao;
+	}
+
+	@Override
+	public List<CharacterVO> getCharList(String kwd) {
+		return selectList("character.getCharList", kwd);
+	}
+
+}

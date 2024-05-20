@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="character">
+
+
+	<select id="getCharList" parameterType="String" resultType="CharacterVO">
+	
+SELECT
+    person.ps_id,
+    person.ps_name,
+    person.ps_kmid,
+    MAX(CASE WHEN personinfo.psinfo_key = '출생' THEN personinfo.psinfo_val END) AS psinfo_key,
+    MAX(personimage.psi_src) AS psi_src,
+    MAX(actor.actor_role) AS actor_role
+FROM
+    person
+LEFT JOIN
+    personinfo ON person.ps_id = personinfo.ps_id
+LEFT JOIN
+    personimage ON person.ps_id = personimage.ps_id
+LEFT JOIN
+    actor ON person.ps_id = actor.actor_id
+WHERE
+    person.ps_name LIKE '%' || #{kwd} || '%'
+GROUP BY
+    person.ps_id, person.ps_name, person.ps_kmid
+	
+	</select>
+	
+	<!-- 인물사진 -->
+	<select id="searchImage" resultType="character.vo.PersonImageVO">
+		select a.ps_id,
+		       b.psi_id,  
+		       b.psi_src    
+		from person a
+		inner join personimage b on a.ps_id = b.ps_id
+		where a.ps_id = #{psId}
+	</select>
+	
+	<select id="getMovActList" parameterType="String" resultType="CharacterVO">
+
+	SELECT
+	p.ps_id,
+	p.ps_name,
+	p.ps_kmid,
+	MAX(CASE WHEN pi.psinfo_key = '출생' THEN pi.psinfo_val END) AS psinfo_key,
+	MAX(pii.psi_src) AS psi_src,
+	MAX(a.actor_role) AS actor_role
+	FROM
+	person p
+	LEFT JOIN
+	personinfo pi ON p.ps_id = pi.ps_id
+	LEFT JOIN
+	personimage pii ON p.ps_id = pii.ps_id
+	LEFT JOIN
+	actor a ON p.ps_id = a.ps_id
+	LEFT JOIN
+	movie m ON a.mv_id = m.mv_id
+	WHERE
+	m.mv_title LIKE '%' || #{kwd} || '%'
+	GROUP BY
+	p.ps_id, p.ps_name, p.ps_kmid
+
+	
+	</select>
+	
+
+	<!-- 인물정보 -->
+	<select id="searchInfo" resultType="character.vo.PersonInfoVO">
+		select a.ps_id, 
+		       a.ps_name,
+		       b.psinfo_key,
+		       b.psinfo_val        
+		from person a
+		inner join personinfo b on a.ps_id = b.ps_id
+		where a.ps_id = #{psId}
+	</select>
+	
+	<!-- 좋아요 -->
+	<select id="personLk" resultType="character.vo.PersonLikeVO">
+		select ps_id
+		, mem_id,
+		pslk_yn,
+        pslk_id,
+		count(*) count
+		from personlike 
+		where ps_id = #{psId}
+		and pslk_yn = 'Y'
+		group by ps_id
+		, mem_id,
+		pslk_yn, pslk_id
+	</select>
+	
+	
+	
+	
+	
+	<insert id="createlike" parameterType="Map">
+		insert into personlike(pslk_id, mem_id, ps_id, pslk_yn)
+    		values(PERSONLIKE_SEQ.nextVal, #{memId}, #{psId}, 'Y')
+		
+	</insert>
+	
+	<update id="updatelike" parameterType="Map">
+		update personlike 
+		set pslk_yn = 'N'  
+		where mem_id = #{memId} and ps_id = #{psId}
+	</update>
+	
+	<update id="updatelikeReverse" parameterType="Map">
+		update personlike 
+		set pslk_yn = 'Y'  
+		where mem_id = #{memId} and ps_id = #{psId}
+	</update>
+	
+	
+	<select id="plvoinfo" resultType="character.vo.PersonLikeVO" parameterType="Map">
+
+	select *
+		from personlike where mem_id = #{memId} and ps_id = #{psId}
+		
+	</select>
+	
+	
+	
+
+
+
+</mapper>

@@ -1,0 +1,16 @@
+package character.service;
+
+import java.util.List;
+
+import character.vo.CharacterVO;
+
+public interface ICharacterService {
+	
+	/**
+	 * keyword를 입력 받아 해당 키워드가 포함되거나 일치하는 인물을 검색하기 위한 메서드
+	 * @param kwd
+	 * @return key워드 연관 인물 List 반환
+	 */
+	public List<CharacterVO> getCharList(String kwd);
+
+}

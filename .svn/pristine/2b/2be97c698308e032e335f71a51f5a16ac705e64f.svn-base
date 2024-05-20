@@ -1,0 +1,38 @@
+package admin.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import admin.service.IAdminMboardService;
+import admin.service.AdminMboardServiceImpl;
+import member.vo.MemberVO;
+
+
+
+@WebServlet("/admin/mboard/blackList.do")
+public class BlackListController extends HttpServlet {
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		IAdminMboardService adminMboardService = AdminMboardServiceImpl.getInstance();
+		
+		List<MemberVO> memberList = adminMboardService.blackList();
+		
+		req.setAttribute("memberList", memberList);
+		
+		req.getRequestDispatcher("/views/admin/mboard/blackList.jsp").forward(req, resp);
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	
+		doGet(req, resp);
+	}
+}

@@ -1,0 +1,96 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 찾기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .search-title {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        .form-search {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .find-name,
+        .find-phone {
+            margin-bottom: 15px;
+        }
+        .btnSearch {
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <form action="/findPw.jsp" name="memberfind" method="POST">
+        <div class="search-title">
+            <h3>본인확인</h3>
+        </div>
+        <section class="form-search">
+            <div class="find-name">
+                <label>이름</label>
+                <input type="text" name="mem_Name" class="btn-name" placeholder="등록한 이름">
+            </div>
+            <div class="find-phone">
+                <label>번호</label>
+                <input type="text" name="mem_Telno" class="btn-phone" placeholder="휴대폰 번호를 입력 (예: 010-1234-5678)">
+            </div>
+            <div class="find-email">
+                <label>이메일</label>
+                <input type="text" name="mem_Email" class="btn-Email" placeholder="등록한 이메일">
+            </div>
+
+        </section>
+        <div class="btnSearch">
+            <input type="button" name="enter" value="찾기" onClick="pw_search()">
+            <input type="button" name="cancel" value="취소" onClick="history.back()">
+        </div>
+    	<div>
+    	
+    	</div>
+    	
+    
+    </form>
+    
+    
+    
+      <script>
+        function pw_search() {
+            var frm = document.memberfind;
+
+            if (frm.mem_Name.value.trim() === "") {
+                alert("이름을 입력해주세요");
+                return;
+            }
+
+            var phoneRegex = /^\d{3}-\d{3,4}-\d{4}$/;
+            if (!phoneRegex.test(frm.mem_Telno.value.trim())) {
+                alert("유효한 휴대폰 번호를 입력해주세요 (예: 010-1234-5678)");
+                return;
+            }
+            var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+            if (!emailRegex.test(frm.mem_Email.value.trim())) {
+                alert("유효한 이메일 주소를 입력해주세요.");
+                return;
+            }
+            
+            frm.method = "post";
+            frm.action = "../../findPw.do";
+            frm.submit();
+        }
+    </script>  
+</body>
+</html>

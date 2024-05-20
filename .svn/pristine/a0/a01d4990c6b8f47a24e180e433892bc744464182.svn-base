@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="movie">
+
+	<!-- 키워드 받아서 키워드가 포함된 영화 전체 출력 -->
+	<select id="getMovieList" parameterType="String" resultType="movieInfoVO">
+		
+		select * from movie 
+		where MV_TITLE like '%' || #{kwd} || '%'
+		
+	</select>
+	
+	<select id="getWatchedList" parameterType="String" resultType="Integer">
+	
+	SELECT mv_id
+FROM moviegrade
+WHERE mem_id = #{memId}
+
+UNION
+
+SELECT mv_id
+FROM moviecomment
+WHERE mem_id = #{memId}
+	
+	</select>
+
+	<select id="getActMovList" parameterType="String" resultType="movieInfoVO">
+
+	SELECT
+	PS.PS_NAME AS PS_NAME,
+	MOVIE.*,
+	ACTOR.ACTOR_ROLE AS ACTOR_ROLE
+	FROM
+	PERSON PS
+	JOIN
+	ACTOR ON PS.PS_ID = ACTOR.PS_ID
+	JOIN
+	MOVIE ON ACTOR.MV_ID = MOVIE.MV_ID
+	WHERE
+	PS.PS_NAME =#{kwd}
+		
+	</select>
+	
+	<!-- mvId를 파라미터값으로 받아 해당 영화 상세 정보를 가져온다 -->
+	<select id="getMovieDetail" parameterType="Int" resultType="movieInfoVO">
+		
+		select * from movie 
+		where mv_id = #{mvId}
+		
+	</select>
+	
+	<!-- mvId를 파라미터값으로 받아 해당 영화 포스터 정보를 가져온다 -->
+	<select id="getMoviePoster" parameterType="Int" resultType="MvPosterVO">
+		
+		SELECT * FROM poster 
+		WHERE mv_id = #{mvId}
+		AND ROWNUM = 1
+		
+	</select>
+	
+	<!-- mvId를 파라미터값으로 받아 해당 영화 평균 별점 *10, 평론가 평균 별점 *10 정보를 가져온다 -->
+	<select id="getMovieGrade" parameterType="Int" resultType="MvGradeVO">
+		
+		<!-- SELECT ROUND(AVG(mvg_rating), 1)*10 AS gradeAvg
+		FROM MovieGrade
+		WHERE mv_id = #{mvId} -->
+		
+		
+		SELECT
+		    nvl(a.gradeAvg,0) as gradeAvg,
+		    nvl(b.gradeCAvg,0) as gradeCAvg
+		FROM
+		    (SELECT ROUND(AVG(mvg_rating), 1) * 10 AS gradeAvg
+		    FROM MovieGrade
+		    WHERE mv_id = #{mvId}) a
+		JOIN
+		    (SELECT ROUND(AVG(mvg_rating), 1) * 10 AS gradeCAvg
+		    FROM MovieGrade
+		    WHERE mv_id = #{mvId}
+		    AND mem_id = (SELECT mem_id FROM member WHERE mem_from = '평론가')) b
+		ON 1=1
+		
+	</select>
+	
+	<insert id="laterInsert" parameterType="MvLaterVO">
+	
+	insert into MOVIELATER (mvlater_id,mv_id,mem_id,mvlater_date)
+	values(MOVIELATER_num_seq.nextval,#{mvId},#{memId},sysdate)
+	
+	</insert>
+
+	<select id="isAlreadyAdded" resultType="java.lang.Boolean">
+	    
+	    SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+	    FROM MOVIELATER
+	    WHERE mv_id = #{mvId} AND mem_id = #{memId}
+	</select>
+
+	<insert id="cmtInsert" parameterType="MvCommentVO">
+	
+	insert into moviecomment (
+	MVC_ID,
+	MEM_ID,
+	MV_ID,
+	MVC_CONTENT,
+	MVC_DATE,
+	MVC_SPOYN,
+	MVC_REGDT)
+	values (
+	moviecomment_num_seq.nextval,
+	#{memId},
+	#{mvId},
+	#{mvcContent},
+	#{mvcDate},
+	#{mvcSpoyn},
+	sysdate )
+		
+	</insert>
+
+	<select id="getActorList" parameterType="int" resultType="ActorVO">
+	SELECT
+	c.ACTOR_ID,
+	c.PS_ID,
+	c.MV_ID,
+	c.ACTOR_ROLE,
+	a.PS_NAME,
+	a.PS_KMID,
+	a.PS_CODE,
+	b.PSI_ID,
+	b.PSI_PATH,
+	b.PSI_STRE_NM,
+	b.PSI_ORGN_NM,
+	b.PSI_EXTSN,
+	b.PSI_SIZE,
+	b.PSI_SRC
+	FROM person A
+	LEFT JOIN personimage B ON A.ps_id = B.ps_id
+	LEFT JOIN actor C ON A.ps_id = C.ps_id
+	LEFT JOIN movie D ON C.mv_id = D.mv_id
+	WHERE D.mv_id = #{mvId}
+	</select>
+	
+	<select id="getVodList" parameterType="int" resultType="VodVO">
+	
+	select * from MOVIEVOD WHERE mv_id = #{mvId}
+	
+	</select>
+	
+	<select id="getCltList" parameterType="int" resultType="MvCollectionVO">
+	
+	SELECT 
+	a.cl_id,
+	a.mem_id,
+	a.cl_title,
+	b.mv_id
+	FROM collection A
+	JOIN clcontent B ON A.cl_id = B.cl_id where mv_id = #{mvId}
+	
+	</select>
+	
+	<select id="getCmtList" parameterType="int" resultType="MvCommentVO">
+	
+	SELECT DISTINCT
+	    a.MVC_ID,
+	    a.MEM_ID,
+	    a.MV_ID,
+	    CASE
+	        WHEN LENGTH(a.MVC_CONTENT) > 90 THEN CONCAT(SUBSTR(a.MVC_CONTENT, 1, 90), '...')
+	        ELSE a.MVC_CONTENT
+	    END AS MVC_CONTENT,
+	    a.mvc_content as FullContent,
+	    a.MVC_DATE,
+	    a.MVC_SPOYN,
+	    a.MVC_REGDT,
+	    a.MVC_DELYN,
+	    b.mem_ncnm AS memNcnm,
+	    b.mem_intro AS memIntro,
+	    (SELECT COUNT(*) FROM mvclike c WHERE a.mvc_id = c.mvc_id) AS mvcLikeCnt,
+	    (SELECT COUNT(*) FROM mvcreply d WHERE a.mvc_id = d.mvc_id) AS mvcReplyCnt,
+	    NVL((SELECT e.mvg_rating FROM moviegrade e WHERE a.mv_id = e.mv_id AND a.mem_id = e.mem_id), 0) * 10 AS memMvgRating,
+	    (SELECT f.memp_path FROM memberprofile f WHERE a.mem_id = f.mem_id) AS mempPath
+	FROM MOVIECOMMENT a
+	JOIN member b ON a.mem_id = b.mem_id
+	LEFT JOIN mvclike c ON a.mvc_id = c.mvc_id
+	LEFT JOIN mvcreply d ON a.mvc_id = d.mvc_id
+	LEFT JOIN moviegrade e ON (a.mv_id = e.mv_id AND a.mem_id = e.mem_id)
+	LEFT JOIN memberprofile f ON a.mem_id = f.mem_id
+	WHERE a.mv_id = #{mvId} AND a.MVC_DELYN = 'N'
+	ORDER BY mvcLikeCnt DESC
+	
+	</select>
+	
+	<insert id="mvcLikeInsert" parameterType="MvcLikeVO">
+	
+	insert into MVCLIKE (
+	MVCLK_ID,
+	MEM_ID,
+	MVC_ID,
+	MVCLK_YN)
+	values (MVCLIKE_num_seq.nextval,#{memId},#{mvcId},'Y')
+	
+	</insert>
+	
+	<insert id="mvGradeInsert" parameterType="MvGradeVO">
+	
+	insert into MOVIEGRADE (
+	MVG_ID,
+	MV_ID,
+	MEM_ID,
+	MVG_RATING,
+	MVG_DATE)
+	values (
+    MOVIEGRADE_num_seq.nextval,
+    #{mvId},
+    #{memId},
+    #{mvgRating}/10,
+    sysdate)
+
+	</insert>
+	
+	<select id="mvgExist" parameterType="MvGradeVO" resultType="int">
+	
+	select count(*) from MOVIEGRADE
+	where mem_id = #{memId} and MV_ID = #{mvId}
+	
+	</select>
+	
+	<update id="mvGradeUpdate" parameterType="MvGradeVO">
+	
+	update MOVIEGRADE
+	set
+	MVG_RATING = #{mvgRating}/10,
+	MVG_DATE = sysdate
+	where MV_ID = #{mvId} and MEM_ID = #{memId}
+	
+	</update>
+	
+	<select id="getMemGrade" parameterType="MvGradeVO" resultType="MvGradeVO">
+	
+	select
+	MVG_ID,
+	MV_ID,
+	MEM_ID,
+	MVG_RATING * 10 as mvgRating,
+	MVG_DATE
+	from MOVIEGRADE
+	where MV_ID = #{mvId} and MEM_ID = #{memId}
+	
+	</select>
+	
+	<select id="getCltPoster" parameterType="Int" resultType="MvPosterVO">
+	
+	SELECT MIN(a.POSTER_IMG) AS POSTER_IMG, a.mv_id, b.cl_id
+	FROM poster a
+	JOIN CLCONTENT b ON a.mv_id = b.mv_id
+	WHERE b.cl_id = #{clId}
+	GROUP BY a.mv_id, b.cl_id
+	
+<!-- 	SELECT MIN(a.POSTER_IMG) AS posterImg, a.mv_id, b.cl_id -->
+<!-- FROM poster a -->
+<!-- JOIN CLCONTENT b ON a.mv_id = b.mv_id -->
+<!-- WHERE b.cl_id IN (SELECT b.cl_id FROM CLCONTENT b WHERE b.mv_id = 1129) -->
+<!-- GROUP BY a.mv_id, b.cl_id -->
+	
+	</select>
+	
+	<select id="getMemCl" parameterType="MvCollectionVO" resultType="MvCollectionVO">
+	select * from COLLECTION where mem_id = #{memId}
+	</select>
+	
+
+	<select id="getBoxOffice" resultType="movieInfoVO">
+		select * from movie where mv_rdate &lt; =SYSDATE and ROWNUM &lt;=6 order by mv_rdate DESC
+	</select>
+	
+	<select id="getMvMvc" parameterType="MvCommentVO" resultType="MvCommentVO">
+	SELECT MVC_ID
+	FROM MOVIECOMMENT
+	WHERE mv_id = #{mvId} and mem_id =#{memId}
+	</select>
+	
+	
+	<insert id="myClInsert" parameterType="MvCollectionVO">
+	
+	insert into CLCONTENT (MV_ID,CL_ID)
+	values (#{mvId},#{clId})
+	
+	</insert>
+	
+	<select id="clExist" parameterType="MvCollectionVO" resultType="int">
+	select count(*) from CLCONTENT where mv_id = #{mvId} and cl_id = #{clId}
+	</select>
+	
+	<insert id="clInsert" parameterType="MvCollectionVO">
+	
+	insert into COLLECTION (
+	CL_ID,
+	MEM_ID,
+	CL_TITLE,
+	CL_DATE,
+	CL_YN)
+	values (
+	COLLECTION_num_seq.nextval,
+	#{memId},
+	#{clTitle},
+	sysdate,
+	'Y'
+	)
+	
+	</insert>
+	
+	<select id="getCmtDetail" parameterType="int" resultType="MvCommentVO">
+	
+	    SELECT DISTINCT
+	    a.MVC_ID,
+	    a.MEM_ID,
+	    a.MV_ID,
+	    CASE
+	        WHEN LENGTH(a.MVC_CONTENT) > 90 THEN CONCAT(SUBSTR(a.MVC_CONTENT, 1, 90), '...')
+	        ELSE a.MVC_CONTENT
+	    END AS MVC_CONTENT,
+	    a.mvc_content as FullContent,
+	    a.MVC_DATE,
+	    a.MVC_SPOYN,
+	    a.MVC_REGDT,
+	    a.MVC_DELYN,
+	    b.mem_ncnm AS memNcnm,
+	    b.mem_intro AS memIntro,
+	    (SELECT COUNT(*) FROM mvclike c WHERE a.mvc_id = c.mvc_id) AS mvcLikeCnt,
+	    (SELECT COUNT(*) FROM mvcreply d WHERE a.mvc_id = d.mvc_id) AS mvcReplyCnt,
+	    NVL((SELECT e.mvg_rating FROM moviegrade e WHERE a.mv_id = e.mv_id AND a.mem_id = e.mem_id), 0) * 10 AS memMvgRating,
+	    (SELECT f.memp_path FROM memberprofile f WHERE a.mem_id = f.mem_id) AS mempPath
+	FROM MOVIECOMMENT a
+	JOIN member b ON a.mem_id = b.mem_id
+	LEFT JOIN mvclike c ON a.mvc_id = c.mvc_id
+	LEFT JOIN mvcreply d ON a.mvc_id = d.mvc_id
+	LEFT JOIN moviegrade e ON (a.mv_id = e.mv_id AND a.mem_id = e.mem_id)
+	LEFT JOIN memberprofile f ON a.mem_id = f.mem_id
+	WHERE a.mvc_id = #{mvcId} AND a.MVC_DELYN = 'N'
+	ORDER BY mvcLikeCnt DESC
+	
+	</select>
+	
+	<select id="getCmtReply" parameterType="int" resultType="ReplyVO">
+	
+	select
+	a.MVCRE_ID,
+	a.MEM_ID,
+	a.MVC_ID,
+	a.MVCRE_CONTENT,
+	a.MVCREC_DATE,
+	b.MEM_NCNM as memNcnm,
+	c.MEMP_STRE_NM as mempStreNm
+	from MVCREPLY a, member b, MEMBERPROFILE c
+	where a.mvc_id =#{mvcId} and a.mem_id = b.mem_id and a.mem_id = c.mem_id
+	order by a.MVCREC_DATE desc
+	
+	</select>
+	
+	<select id="mvcLikeExist" parameterType="MvcLikeVO" resultType="int">
+	
+	select count(*) from MVCLIKE
+	where mem_id = #{memId} and mvc_id = #{mvcId}
+	
+	</select>
+	
+	<delete id="mvcLikeDelete" parameterType="MvcLikeVO">
+	
+	DELETE FROM MVCLIKE
+	WHERE mem_id = #{memId} and mvc_id = #{mvcId}
+	
+	</delete>
+	
+	<select id="getSottList" parameterType="int" resultType="SottVO">
+	
+	select a.*, c.ott_name, c.ott_link from screenableott a, movie b, ott c
+    where a.mv_id = #{mvId} and a.mv_id = b.mv_id and a.ott_id = c.ott_id
+	
+	</select>
+	
+	<update id="mvcRpUpdate" parameterType="MvcReplyVO">
+	
+	update MVCREPLY
+	set
+	MVCRE_CONTENT = #{mvcreContent},
+	MVCREC_DATE = sysdate
+	where MVCRE_ID = #{mvcreId}
+	
+	</update>
+	
+	<delete id="mvcRpDelete" parameterType="int">
+	
+	delete from mvcreply
+	where mvcre_id = #{mvcreId}
+	
+	</delete>
+	
+</mapper>

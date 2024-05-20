@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comment">
+
+	<select id="getACommentByMvIdNMemId" parameterType="movie.vo.GradeVOforYE" resultType="CommentVO">
+	
+		select * from moviecomment where mv_id = #{mvId} and mem_id = #{memId} and rownum=1
+
+	</select>
+	
+
+
+</mapper>

@@ -1,0 +1,37 @@
+package admin.service;
+
+import java.util.List;
+
+import admin.dao.IAdminReportDao;
+import admin.dao.AdminReportDaoImpl;
+import admin.vo.MvcReportVO;
+
+
+
+
+public class AdminReportServiceImpl implements IAdminReportService{
+
+	private static IAdminReportService adminReportService;
+	private IAdminReportDao adminReportDao;
+	
+	private AdminReportServiceImpl() {
+		adminReportDao = AdminReportDaoImpl.getInstance();
+		
+	}
+	public static IAdminReportService getInstance() {
+		
+		if(adminReportService == null) {
+			adminReportService = new AdminReportServiceImpl();
+		}
+		
+		return adminReportService;
+	}
+	
+	@Override
+	public List<MvcReportVO> reportList() {
+		List<MvcReportVO> MvcReportList = adminReportDao.reportList();
+		return MvcReportList;
+	}
+	
+
+}

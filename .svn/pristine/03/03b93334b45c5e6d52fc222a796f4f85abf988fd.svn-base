@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="adminQna">
+
+	<!--전체 글 개수 조회 -->
+	<select id="countQnaList" resultType="int">
+  		SELECT COUNT(*) FROM qna
+  	</select>
+
+	<!--문의 게시판 전체 조회 -->
+	<select id="qnaList" parameterType="map" resultType="admin.vo.QnaVO">
+	
+		SELECT A.*
+	FROM (
+    SELECT ROWNUM AS RNUM, B.*
+    FROM (
+        SELECT
+            A.QA_ID as qaId, 
+            A.qa_title as qaTitle,
+            A.QA_CONTENT as qaContent, 
+            B.MEM_EMAIL AS QAEMAIL, 
+            A.QA_DATE as qaDate
+        FROM 
+            QNA A
+        JOIN 
+            MEMBER B ON A.MEM_ID = B.MEM_ID
+        ORDER BY 
+            A.QA_ID DESC ) B            
+	<![CDATA[    WHERE ROWNUM <= #{end} ) A WHERE RNUM >= #{start} ]]>
+
+	</select>
+	
+		<!-- 미답변 문의 조회 -->
+	<select id="unQnaList" parameterType="map" resultType="admin.vo.QnaVO">
+	
+		SELECT A.*
+		FROM (
+	    SELECT ROWNUM AS RNUM, B.*
+	    FROM (
+		SELECT
+	    A.QA_ID as qaId,
+	    A.qa_title as qaTitle,
+	    A.QA_CONTENT as qaContent, 
+	    B.MEM_EMAIL AS QAEMAIL, 
+	    A.QA_DATE as qaDate
+		FROM 
+	    QNA A
+		JOIN 
+	    MEMBER B ON A.MEM_ID = B.MEM_ID
+		LEFT JOIN
+	    qnareply C ON A.QA_ID = C.QA_ID
+		WHERE
+	    C.QA_ID IS NULL
+	        ORDER BY 
+	            A.QA_ID DESC ) B
+	<![CDATA[    WHERE ROWNUM <= #{end} ) A WHERE RNUM >= #{start} ]]>
+
+	</select>
+	
+		<select id="qnaDetail" parameterType="int" resultType="admin.vo.QnaVO">
+	
+		select * from qna
+
+	</select>
+	
+</mapper>

@@ -1,0 +1,453 @@
+<%@page import="movie.vo.MovieInfoVO"%>
+<%@page import="java.util.List"%>
+<%@page import="member.vo.MemberVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<%@include file="../include/header.jsp"%>
+
+<style>
+
+
+.row, .col-lg-12 {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	
+}
+
+.item {
+	width: 300px;
+	margin: 15px 20px;
+}
+	
+.item img {
+
+	height: auto;
+	width: 100%;
+
+}
+
+.section-heading h2 {
+	margin-top: 50px;
+}
+
+section {
+	height: 100%;
+}
+
+section.our-courses {
+	padding-top: 0;
+}
+
+#section-container {
+	padding-top: 200px;
+
+}
+
+.header-area.header-sticky {
+    background-color: deeppink;
+    min-height: 80px;
+}
+
+</style>
+
+  <!-- 내용 표시  -->
+  
+<%
+
+	List<MovieInfoVO> movieInfoList = (List<MovieInfoVO>) request.getAttribute("movieInfoList");
+
+%>
+
+
+<div id="section-container">
+
+    <section class="our-courses" id="courses">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section-heading">
+            <h2>영화</h2>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          
+<%
+		if(movieInfoList != null){
+			for(MovieInfoVO miv : movieInfoList){
+%>
+
+          	<!-- 하나의 정보 -->
+            <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4><%=miv.getMvTitle() %></h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용1</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+<%			
+			}
+		}
+%>
+
+            
+ 
+ 
+            
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+
+
+     <section class="our-courses" id="courses">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section-heading">
+            <h2>인물</h2>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          
+          	<!-- 하나의 정보 -->
+            <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용1</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용1</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+             <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용2</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용2</li>
+                        <li>내용2</li>
+                        <li>내용2</li>
+                        <li>내용2</li>
+                        <li>내용2</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용2</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+             <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용3</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용3</li>
+                        <li>내용3</li>
+                        <li>내용3</li>
+                        <li>내용3</li>
+                        <li>내용3</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용3</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+             <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용4</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용4</li>
+                        <li>내용4</li>
+                        <li>내용4</li>
+                        <li>내용4</li>
+                        <li>내용4</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용4</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용5</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용5</li>
+                        <li>내용5</li>
+                        <li>내용5</li>
+                        <li>내용5</li>
+                        <li>내용5</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용5</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+ 
+            
+        </div>
+      </div>
+    </div>
+  </section>
+  
+     <section class="our-courses" id="courses">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section-heading">
+            <h2>뉴스</h2>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          
+          	<!-- 하나의 정보 -->
+            <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용1</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                        <li>내용1</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용1</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+             <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용2</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용2</li>
+                        <li>내용2</li>
+                        <li>내용2</li>
+                        <li>내용2</li>
+                        <li>내용2</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용2</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+             <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용3</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용3</li>
+                        <li>내용3</li>
+                        <li>내용3</li>
+                        <li>내용3</li>
+                        <li>내용3</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용3</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+             <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용4</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용4</li>
+                        <li>내용4</li>
+                        <li>내용4</li>
+                        <li>내용4</li>
+                        <li>내용4</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용4</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="item">
+              <img src="assets/images/course-01.jpg" alt="Course One">
+              <div class="down-content">
+                <h4>내용5</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li>내용5</li>
+                        <li>내용5</li>
+                        <li>내용5</li>
+                        <li>내용5</li>
+                        <li>내용5</li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>내용5</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+<%@include file="../include/footer.jsp"%>
+
+  <!-- Scripts -->
+  <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="assets/js/isotope.min.js"></script>
+    <script src="assets/js/owl-carousel.js"></script>
+    <script src="assets/js/lightbox.js"></script>
+    <script src="assets/js/tabs.js"></script>
+    <script src="assets/js/video.js"></script>
+    <script>
+
+    //according to loftblog tut
+    $('.nav li:first').addClass('active');
+
+    var showSection = function showSection(section, isAnimate) {
+      var
+      direction = section.replace(/#/, ''),
+      reqSection = $('.section').filter('[data-section="' + direction + '"]'),
+      reqSectionPos = reqSection.offset().top - 0;
+
+      if (isAnimate) {
+        $('body, html').animate({
+          scrollTop: reqSectionPos },
+        800);
+      } else {
+        $('body, html').scrollTop(reqSectionPos);
+      }
+
+    };
+
+    var checkSection = function checkSection() {
+      $('.section').each(function () {
+        var
+        $this = $(this),
+        topEdge = $this.offset().top - 80,
+        bottomEdge = topEdge + $this.height(),
+        wScroll = $(window).scrollTop();
+        if (topEdge < wScroll && bottomEdge > wScroll) {
+          var
+          currentId = $this.data('section'),
+          reqLink = $('a').filter('[href*=\\#' + currentId + ']');
+          reqLink.closest('li').addClass('active').
+          siblings().removeClass('active');
+        }
+      });
+    };
+
+    $('.main-menu, .responsive-menu, .scroll-to-section').on('click', 'a', function (e) {
+      e.preventDefault();
+      showSection($(this).attr('href'), true);
+    });
+
+    $(window).scroll(function () {
+      checkSection();
+    });
+    
+    
+    
+    </script>
+        
+        
+</div>
+
+
+
+</body>
+</html>

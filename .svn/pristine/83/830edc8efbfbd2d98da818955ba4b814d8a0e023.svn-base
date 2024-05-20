@@ -1,0 +1,23 @@
+package collection.dao;
+
+import util.MyBatisDao;
+
+public class ClLikeDaoImpl extends MyBatisDao implements IClLikeDao {
+	
+	private static IClLikeDao singleTon;
+	
+	private ClLikeDaoImpl() {};
+	
+	public static IClLikeDao getInstance() {
+		if( singleTon ==null ) {
+			singleTon = new ClLikeDaoImpl();
+		}
+		return singleTon;
+	}
+
+	@Override
+	public int countLike(int clId) {
+		return selectOne("clLike.countLike", clId);
+	}
+
+}

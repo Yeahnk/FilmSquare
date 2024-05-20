@@ -1,0 +1,325 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="comm.controller.EmailService" %>
+<%@ page import="java.io.InputStreamReader" %>
+<%@ page import="java.io.BufferedInputStream" %>
+<%@ page import="java.io.DataOutputStream" %>
+<%@ page import="java.net.URL" %>
+<%@ page import="java.net.HttpURLConnection" %>
+<%@ page import="java.io.BufferedReader" %>
+<%@ page import="java.util.Properties" %>
+<%@ page import="javax.mail.Message" %>
+<%@ page import="javax.mail.Session" %>
+<%@ page import="javax.mail.Transport" %>
+<%@ page import="javax.mail.internet.InternetAddress" %>
+<%@ page import="javax.mail.internet.MimeMessage" %>
+<%@ page import="java.security.SecureRandom" %>
+<!DOCTYPEhtml>
+<html>
+
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<style>
+  .rq {
+    color: red;
+  }
+
+  #Inum1 {
+    display: inline-block;
+    width:20px;
+  }
+  body{
+  	text-align: center;
+  }
+</style>
+</head>
+<body>
+  
+  <div class="col-sm-8 text-left">
+    <h3>회원가입</h3>
+    <hr>
+    
+    <form action="./insert.do" class="form-horizontal" method="post" onsubmit="return valid()">
+     
+      <div class="form-group">
+        <label for="name" class="control-label col-sm-2">이름</label>
+        <span class="sp"></span>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="mem_Name" name="memName" required pattern="[가-힣]{2,8}">
+        </div>
+      </div>
+      
+         <div class="form-group">
+            <label for="pass" class="control-label col-sm-2">비밀번호</label>
+            <div class="col-sm-6">
+               <input type="password" class="form-control" id="mem_Pw" name="memPw" required pattern="(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#\$%\^&amp;\*\(\)_\+\|]).{8,}" oninput="checkPasswordMatch()">
+            </div>
+         </div>
+
+         <div class="form-group">
+            <label for="passConfirm" class="control-label col-sm-2">비밀번호 확인</label>
+            <div class="col-sm-6">
+               <input type="password" class="form-control" id="passConfirm" name="memPassConfirm" required pattern="(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#\$%\^&amp;\*\(\)_\+\|]).{8,}" oninput="checkPasswordMatch()">
+               <span id="passConfirmMessage"></span>
+            </div>
+         </div>
+
+
+
+			<div class="form-group">
+				<label for="nname" class="control-label col-sm-2">닉네임</label> <span
+					class="sp"></span>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" id="mem_Ncnm"
+						name="memNcnm" required pattern="[가-힣]{2,8}">
+					<!-- 실시간 닉네임 중복 체크 결과를 출력할 영역 -->
+					<span id="nicknameCheckResult"></span>
+				</div>
+				<!-- 닉네임 중복 확인 버튼 추가 -->
+				<div class="col-sm-2">
+					<button type="button" onclick="checkNickname()">중복확인</button>
+				</div>
+			</div>
+
+
+			<!-- 이메일 입력 -->
+			<div class="form-group">
+				<label for="email" class="control-label col-sm-2">이메일<span
+					class="rq"> *</span></label>
+				<div class="col-sm-6">
+					<input type="email" class="form-control" id="email"
+						name="memEmail" placeholder="이메일을 입력하세요"
+						pattern="[0-9a-zA-Z]+@[0-9a-zA-Z]+(\.[a-z]+){1,2}">
+				</div>
+				<!-- 이메일 인증 버튼 추가 -->
+				<div class="col-sm-2">
+					<button type="button" onclick="sendVerificationEmail()">이메일
+						전송</button>
+				</div>
+			</div>
+
+			<!-- 전송된 숫자 입력 -->
+			<div class="form-group">
+				<label for="verificationCode" class="control-label col-sm-2">인증
+					코드<span class="rq"> *</span>
+				</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" id="verificationCode"
+						name="verification_code" placeholder="인증 코드를 입력하세요" required
+						pattern="[0-9]{6}">
+				</div>
+				<!-- 인증번호 확인 버튼 추가 -->
+				<div class="col-sm-2">
+					<button type="button" onclick="checkVerificationCode()">인증번호 확인</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="inum" class="control-label col-sm-2">주민등록번호<span
+					class="rq"> *</span></label>
+			<div class="col-sm-2">
+			    <input type="text" class="form-control" id="inum1" name="memInum1" 
+			    placeholder="123456" required pattern="[0-9]{6}">
+			</div>
+			<div class="col-sm-1">
+			 <input type="hidden" class="form-control">
+			    -
+			</div>
+			<div class="col-sm-3">
+			    <input type="text" class="form-control" id="inum2" name="memInum2" 
+			    placeholder="1234567" required pattern="[0-9]{7}">
+			</div>
+				<span id="inumErrorMessage" class="rq"></span>
+			</div>
+
+			<div class="form-group">
+				<label for="tel" class="control-label col-sm-2">연락처</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" id="mem_Telno"
+						name="memTelno" placeholder="010-0000-0000" required
+						pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}">
+				</div>
+			</div>
+
+			<!-- Google reCAPTCHA -->
+			<div class="form-group">
+				<label for="recaptcha" class="control-label col-sm-2">reCAPTCHA<span
+					class="rq"> *</span></label>
+				<div class="col-sm-6">
+					<div class="g-recaptcha"
+						data-sitekey="6LcKxUgpAAAAAAN-TGBKRTy8hzXUodck7LrXEUoA"></div>
+					<span id="recaptchaError" class="rq"></span>
+				</div>
+			</div>
+
+	
+
+			<!-- 제출 버튼 -->
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-6">
+                    <button type="submit" class="btn btn-default" id="joinButton" disabled>가입하기  <div class="form-group">
+					<div class="col-sm-offset-2 col-sm-6">
+						<button type="button" class="btn btn-default"onclick="cancelRegistration()">취소</button>
+					</div>
+				</div></button>
+                    <span id="joinspan"></span>
+                </div>
+				
+			</div>
+        </form>
+    </div>
+    
+<script>
+
+$(document).ready(function() {
+    var passwordInput = $("#mem_Pw");
+    var confirmPasswordInput = $("#passConfirm");
+    var isPasswordInput = false;
+
+    passwordInput.on("input", function() {
+       isPasswordInput = true;
+    });
+
+    confirmPasswordInput.on("input", function() {
+       var password = passwordInput.val();
+       var confirmPassword = confirmPasswordInput.val();
+
+       if (!isPasswordInput || password.trim().length === 0 && confirmPassword.trim().length === 0) {
+          $("#passConfirmMessage").html("");
+          return;
+       }
+
+       if (password === confirmPassword) {
+          $("#passConfirmMessage").html("비밀번호 일치").css("color", "green");
+          document.getElementById("joinButton").disabled = false;
+       } else {
+          $("#passConfirmMessage").html("비밀번호 불일치").css("color", "red");
+          document.getElementById("joinButton").disabled = true;
+       }
+    });
+ });
+ 
+/* function checkInum() {
+    var inumInput = document.getElementById("inum");
+    var inumErrorMessage = document.getElementById("inumErrorMessage");
+    var inumPattern = /^[0-9]{6}-[0-9]{7}$/;
+
+    if (inumPattern.test(inumInput.value)) {
+        // 주민등록번호가 유효한 경우
+        // 추가로 필요한 로직을 작성하세요
+        inumErrorMessage.innerHTML = ""; // 유효성 에러 메시지 초기화
+        console.log("주민등록번호 유효");
+    } else {
+        // 주민등록번호가 유효하지 않은 경우
+        inumErrorMessage.innerHTML = "주민등록번호 형식이 올바르지 않습니다."; // 유효성 에러 메시지 설정
+        console.log("주민등록번호 유효하지 않음");
+    }
+} */
+
+function sendVerificationEmail() {
+    var userEmail = document.getElementById("email").value;
+
+    var verificationCode = Math.floor(100000 + Math.random() * 900000);
+
+    $.ajax({
+        type: "POST",
+        url: "sendCode.do",
+        data: {
+            memEmail: userEmail,
+            verification_code: verificationCode
+        },
+        success: function (response) {
+            if (response === "success") {
+                alert("이메일 인증 메일이 전송되었습니다.");
+                // 인증 성공 시 가입 버튼 활성화
+                document.getElementById("joinButton").disabled = false;
+                document.getElementById("cancelButton").disabled = false;
+            } else if (response === "duplicate") {
+                alert("중복된 이메일 주소입니다. 다른 이메일 주소를 사용하세요.");
+                // 중복된 이메일이면 다시 페이지로 이동
+
+            } else {
+                alert("이메일 전송 실패");
+                // 이메일 전송 실패 시 가입 버튼 비활성화
+                document.getElementById("joinButton").disabled = true;
+            }
+        },
+        error: function (error) {
+            alert("서버 오류: " + error);
+        }
+    });
+}
+
+
+
+	function checkVerificationCode() {
+	    var verificationCodeInput = document.getElementById("verificationCode").value;
+
+	    $.ajax({
+	        type: "POST",
+	        url: "checkCode.do", 
+	        data: {
+	            verification_code: verificationCodeInput
+	        },
+	        success: function (response) {
+	            if (response === "success") {
+	                // 인증 성공 메시지만 표시하고 가입 버튼을 활성화하지 않음
+	                document.getElementById("joinspan").innerText = "인증 성공. 인증 코드가 확인되었습니다.";
+	                // 인증 성공 시 가입 버튼 활성화
+	                document.getElementById("joinButton").disabled = false;
+	                document.getElementById("cancelButton").disabled = false;
+	            } else {
+	                document.getElementById("joinspan").innerText = "인증 실패. 올바른 인증 코드를 입력하세요.";
+	                // 인증 실패 시 가입 버튼 비활성화
+	                document.getElementById("joinButton").disabled = true;
+	            }
+	        },
+	        error: function (error) {
+	            alert("서버 오류: " + error);
+	        }
+	    });
+	}
+	function cancelRegistration() {
+	    window.location.href = "main.do";
+	}
+
+	function checkNickname() {
+		  var nickname = $("#mem_Ncnm").val();
+
+		  console.log("닉네임 확인 중:", nickname);
+
+		  $.ajax({
+		    type: "POST",
+		    url: "nickChk.do",
+		    data: {
+		      nickname: nickname
+		    },
+		    success: function(response) {
+		      console.log("서버 응답:", response);
+
+		      if (response.trim() === "사용가능") {
+		        $("#nicknameCheckResult").html("<span style='color: green;'>사용 가능한 닉네임입니다.</span>");
+		        document.getElementById("joinButton").disabled = false;
+		      } else {
+		        $("#nicknameCheckResult").html("<span style='color: red;'>이미 사용 중인 닉네임입니다.</span>");
+		        document.getElementById("joinButton").disabled = true;
+		      }
+		    },
+		    error: function(error) {
+
+		      console.error("서버 오류: " + error);
+		    }
+		  });
+		}
+
+
+	
+</script>
+
+</body>
+</html>

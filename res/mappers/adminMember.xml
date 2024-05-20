@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="adminMember">
+
+	<!-- 이 영역에 SQL문에 맞는 태그를 사용하여 SQL문을 기술한다. 사용할 수 있는 기본적인 태그들 <select> ~~~ 
+		</select> <insert> ~~~ </insert> <update> ~~~ </update> <delete> ~~~ </delete> 
+		위 태그에서 사용되는 속성들 1) id : 해당 태그(SQL)를 호출할 때 namespace값과 연결하여 사용하는 고유 ID값 2) 
+		parameterType : SQL문에 사용될 데이터가 들어있는 객체타입을 지정한다. (보통 VO클래스 또는 자바의 자료형이름 등이 
+		사용된다.) 3) resultType : select문을 실행한 결과를 담을 객체타입을 지정한다. 4) resultMap : 결과레코드 
+		컬럼명과 VO객체의 속성명이 다를 경우에 적절한 매핑을 위해 사용한다. -->
+	<!--전체 글 개수 조회 -->
+	<select id="countList" resultType="int">
+		SELECT COUNT(*) FROM member
+	</select>
+
+	<!--블랙리스트 글 개수 조회 -->
+	<select id="bcountList" resultType="int">
+		SELECT COUNT(*) FROM member where MEM_STOPYN = 'Y'
+	</select>
+
+	<!--회원리스트 조회 -->
+	<select id="selectAll" parameterType="map"
+		resultType="member.vo.MemberVO">
+		<!-- 페이징 처리 안 된 것 -->
+		<!-- SELECT mem_id as memId, mem_name as memName, mem_ncnm as memNcnm, 
+			mem_telno as memTelno, SUBSTR(mem_inum, 1, 6) as memBirth, CASE WHEN SUBSTR(mem_inum, 
+			7, 1) IN ('1', '3') THEN '남' WHEN SUBSTR(mem_inum, 7, 1) IN ('2', '4') THEN 
+			'여' ELSE '미입력' END AS memMW, (SELECT COUNT(*) FROM mvcreport B WHERE B.mem_id 
+			= A.mem_id) AS reportCount FROM member A -->
+
+
+		SELECT
+		mem_email as memEmail,
+		mem_id as memId,
+		mem_name as memName,
+		mem_ncnm as memNcnm,
+		mem_telno as memTelno,
+		mem_stopyn as memStopyn,
+		SUBSTR(mem_inum, 1, 6) as memBirth,
+		CASE
+		WHEN SUBSTR(mem_inum, 8, 1) IN ('1', '3') THEN '남'
+		WHEN SUBSTR(mem_inum, 8, 1) IN ('2', '4') THEN '여'
+		ELSE '미입력'
+		END AS memMW,
+		(SELECT COUNT(*) FROM mvcreport B WHERE B.mem_id = A.mem_id) AS reportCount
+		FROM (
+		SELECT ROWNUM AS RNUM, A.*
+		FROM (
+		SELECT * FROM member where mem_id IS NOT NULL
+            AND mem_email IS NOT NULL
+            AND mem_name IS NOT NULL
+            AND mem_ncnm IS NOT NULL
+            AND mem_telno IS NOT NULL
+            AND mem_stopyn IS NOT NULL
+            AND mem_inum IS NOT NULL
+        ORDER BY mem_id desc
+		) A
+	    <![CDATA[ WHERE ROWNUM <= #{end}) A WHERE A.RNUM >= #{start} ]]>
+
+
+
+	</select>
+
+	<!--블랙리스트 조회 -->
+	<select id="blackList" parameterType="map"
+		resultType="member.vo.MemberVO">
+
+		<!-- SELECT A.mem_id as memId, A.mem_name as memName, A.mem_ncnm as memNcnm, 
+			A.mem_telno as memTelno, SUBSTR(A.mem_inum, 1, 6) as memBirth, CASE WHEN 
+			SUBSTR(A.mem_inum, 7, 1) IN ('1', '3') THEN '남' WHEN SUBSTR(A.mem_inum, 7, 
+			1) IN ('2', '4') THEN '여' ELSE '미입력' END AS memMW, (SELECT COUNT(*) FROM 
+			mvcreport B WHERE B.mem_id = A.mem_id) AS reportCount, MIN(B.mvcrp_Content) 
+			AS mvcrpContent FROM member A JOIN mvcreport B ON A.mem_id = B.mem_id WHERE 
+			A.mem_stopyn = 'Y' GROUP BY A.mem_id, A.mem_name, A.mem_ncnm, A.mem_telno, 
+			A.mem_inum -->
+
+		select A.* from(
+		select ROWNUM AS RNUM, B.* from(
+
+		SELECT
+		A.mem_id as memId,
+		A.mem_email as memEmail,
+		A.mem_name as memName,
+		A.mem_ncnm as memNcnm,
+		A.mem_telno as memTelno,
+		SUBSTR(A.mem_inum, 1, 6) as memBirth,
+		CASE
+		WHEN SUBSTR(A.mem_inum, 7, 1) IN ('1', '3') THEN '남'
+		WHEN SUBSTR(A.mem_inum, 7, 1) IN ('2', '4') THEN '여'
+		ELSE '미입력'
+		END AS memMW,
+		(SELECT COUNT(*) FROM mvcreport B WHERE B.mem_id = A.mem_id) AS reportCount,
+		nvl((Select b.mvcrp_Content from mvcreport b where A.mem_id = b.mem_id
+		and rownum = 1), '무신고') as mvcrpContent
+		FROM
+		member A
+		WHERE
+		A.mem_stopyn = 'Y' )B
+	 <![CDATA[	 where ROWNUM <= #{end} )A where A.rnum >= #{start} ]]>
+
+	</select>
+
+	<!-- 블랙리스트 삭제 수정 -->
+	<update id="blackUpdate" parameterType="member.vo.MemberVO">
+
+		update member
+		set mem_stopyn = 'N'
+		where mem_id = #{memId}
+
+	</update>
+
+	<!-- 블랙리스트 추가 수정 -->
+	<update id="listUpdate" parameterType="member.vo.MemberVO">
+
+		update member
+		set mem_stopyn = 'Y'
+		where mem_id = #{memId}
+
+	</update>
+
+	<!-- 페이징처리 없는 멤버 전체리스트 조회 -->
+
+	<select id="selectAllList" resultType="member.vo.MemberVO">
+
+		SELECT
+		A.mem_id AS memId,
+		A.mem_email AS memEmail,
+		A.mem_name AS memName,
+		A.mem_ncnm AS memNcnm,
+		A.mem_telno AS memTelno,
+		SUBSTR(A.mem_inum, 1, 6) AS memBirth,
+		CASE
+		WHEN SUBSTR(A.mem_inum, 7, 1) IN ('1', '3') THEN '남'
+		WHEN SUBSTR(A.mem_inum, 7, 1) IN ('2', '4') THEN '여'
+		ELSE '미입력'
+		END AS memMW,
+		(SELECT COUNT(*) FROM mvcreport B WHERE B.mem_id = A.mem_id) AS reportCount,
+		NVL(
+		(SELECT b.mvcrp_Content FROM mvcreport b WHERE A.mem_id = b.mem_id AND ROWNUM
+		= 1),
+		'무신고'
+		) AS mvcrpContent
+		FROM
+		member A
+		WHERE
+		A.mem_delyn != 'Y' OR A.mem_delyn IS NULL
+
+
+	</select>
+
+
+
+
+</mapper>

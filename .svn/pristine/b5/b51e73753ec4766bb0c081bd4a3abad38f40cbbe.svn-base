@@ -1,0 +1,96 @@
+package collection.controller;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import collection.service.ClLikeServiceImpl;
+import collection.service.CollcontentServiceImpl;
+import collection.service.CollectionServiceImpl;
+import collection.service.IClLikeService;
+import collection.service.ICollcontentService;
+import collection.service.ICollectionService;
+import collection.vo.CollParamContainerVO;
+import collection.vo.CollcontentVO;
+import collection.vo.CollectionVO;
+import member.servive.AtchFileServiceImpl;
+import member.servive.IAtchFileService;
+import member.servive.IMemberService;
+import member.servive.MemberServiceImpl;
+import member.vo.AtchFileVO;
+import member.vo.MemberVO;
+import movie.service.IMovieGradeService;
+import movie.service.IMovieInfoService;
+import movie.service.IPosterService;
+import movie.service.MovieGradeServiceImpl;
+import movie.service.MovieInfoServiceImpl;
+import movie.service.PosterServiceImpl;
+import movie.vo.MovieInfoVO;
+import movie.vo.PosterVO;
+
+@WebServlet("/collectionDetail.do")
+public class CollectionDetailController extends HttpServlet {
+	 
+	 ICollectionService collectionService = CollectionServiceImpl.getInstance();
+	 IMemberService memberService = MemberServiceImpl.getInstance();
+	 IAtchFileService fileService = AtchFileServiceImpl.getInstance();
+	 ICollcontentService collContentService = CollcontentServiceImpl.getInstance();
+	 IMovieInfoService movieInfoService = MovieInfoServiceImpl.getInstance();
+	 IPosterService posterService = PosterServiceImpl.getInstance();
+	 IClLikeService collLikeService = ClLikeServiceImpl.getInstance();
+	 IMovieGradeService movieGradeService = MovieGradeServiceImpl.getInstance();
+	 
+	 
+	 @Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		 
+		 // 파라미터 받아오기
+		 String sclId = req.getParameter("clId");
+		 
+		 
+		 CollectionVO coll = collectionService.getACollection(new CollectionVO(Integer.parseInt(sclId)));
+		 String memId = coll.getMemId();
+		 
+		 int likeCnt = collLikeService.countLike(coll.getClId());
+		 coll.setLikeCnt(likeCnt);
+		 
+		 MemberVO mem = memberService.getAMember(new MemberVO(memId));
+		 
+		 AtchFileVO file = fileService.getAFile(memId);
+		 
+		 List<CollcontentVO> collContentList = collContentService.getCollContentList(new CollcontentVO(Integer.parseInt(sclId)));
+
+		 List<Map<String, Object>> paramMapList = new ArrayList<Map<String,Object>>();
+		 for(CollcontentVO collCont : collContentList ) {
+			 
+			 MovieInfoVO movie = movieInfoService.getAMovie(collCont.getMvId());
+			 movie.setGradeAvg(movieGradeService.getGradeAvg(movie.getMvId()));
+			 PosterVO poster = posterService.getPosterByMvId(movie.getMvId());
+			
+			 Map<String, Object> paramMap = new HashMap<String, Object>();
+			 paramMap.put("movie", movie);
+			 paramMap.put("poster", poster);
+			 
+		 }
+		 
+		 CollParamContainerVO collParam = new CollParamContainerVO(coll, mem, file, paramMapList );
+		 req.setAttribute("collParam", collParam);
+		 
+		 req.getRequestDispatcher("/views/collectionDetail.jsp").forward(req, resp);
+		 
+	}
+	 
+	 @Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		 
+	}
+
+}

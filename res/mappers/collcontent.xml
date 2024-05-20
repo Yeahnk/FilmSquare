@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="collcontent">
+
+	<select id="getCollContentList" parameterType="CollcontentVO" resultType="CollcontentVO">
+		select * from clcontent where cl_id = #{clId}
+	</select>
+
+	
+
+
+</mapper>

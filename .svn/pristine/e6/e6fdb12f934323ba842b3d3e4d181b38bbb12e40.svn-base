@@ -1,0 +1,466 @@
+<%@page import="movie.vo.PosterVO"%>
+<%@page import="movie.service.PosterServiceImpl"%>
+<%@page import="movie.service.IPosterService"%>
+<%@page import="movie.service.MovieInfoServiceImpl"%>
+<%@page import="movie.service.IMovieInfoService"%>
+<%@page import="java.util.List"%>
+<%@page import="movie.vo.MovieInfoVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="globals.css" />
+    <link rel="stylesheet" href="styleguide.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+  </head>
+  <%
+  int clId = 181;
+  IMovieInfoService movieService = MovieInfoServiceImpl.getInstance();
+  IPosterService posterService = PosterServiceImpl.getInstance();
+  ICollectionService collService = CollectionServiceImpl.getInstance();
+  %>
+  <body>
+    <div class="frame">
+      <div class="navbar">
+        <a class="text-wrapper" href="<%=request.getContextPath()%>/main.do" >FILM SQUARE</a>
+        <a class="text-wrapper" href="<%=request.getContextPath() %>/releasingCal.do">CALENDAR</a>
+        <a class="text-wrapper" href="<%=request.getContextPath() %>/map.do">MAP</a>
+        <div class="text-wrapper">SEARCH</div>
+        <a class="text-wrapper">JOIN</a>
+        <a class="text-wrapper" href="<%=request.getContextPath()%>/memLogin.do">LOG IN</a>
+      </div>
+      <div class="frame">
+        <div class="main-image" style="background-image: url(./images/design/lalalend.jpg)"><div class="div">FILM SQUARE</div></div>
+      </div>
+      <div class="box-office">
+      <div class="overlap-group">
+        <div class="BOX-OFFICE">BOX <br />OFFICE</div>
+        <div class="frame-2">
+        <%
+        	List<MovieInfoVO> movieList = movieService.getBoxOffice();
+        	for(int i=0; i<5; i++){
+        		MovieInfoVO aMovie = movieList.get(i); 	
+        		PosterVO poster = posterService.getPosterByMvId(aMovie.getMvId());
+        %>
+          <a href="#영화상세 링크#" class="frame-3" style="background-image: url(<%=poster.getPosterImg()%>)"></a>
+        <%
+        	}        
+        %>
+        </div>
+      </div>
+    </div>
+    <div class="webgin">
+        <div class="overlap">
+          <div class="FILM-s-CHOICE-wrapper">
+            <div class="FILM-s-CHOICE">FILM’S<br />CHOICE</div>
+          </div>
+          <div class="overlap-2">
+            <a class="frame-8"></a>
+            <div class="frame-9">
+              <div class="text-wrapper-2">에디터 무진</div>
+              <div class="text-wrapper-3">헤어질 결심</div>
+              <p class="p">
+                해준(박해일 분)의 마을을 사로잡은 것은 서래(탕웨이 분)의 아름다운 외모만이 아니다. 외국인에게만 느낄 수
+                있는 이질적인 감정, 서래가 가까스로 꺼낸 서투른 한국어가 머릿속에 스며드는 동안 해준은 자기도 모르게
+                그녀에게 빠져들고 있었다.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%
+      CollectionVO coll = new CollectionVO(new BigDe)
+      %>
+      <div class="collection">
+        <div class="div-wrapper"><div class="text-wrapper-4">COLLECTION</div></div>
+        <div class="frame-10">
+          <div class="frame-11">
+            <div class="text-wrapper-5">마틴 스콜세지의 컴패니언 필름즈</div>
+            <div class="text-wrapper-6">DDIT 영화 매니아</div>
+          </div>
+          <div class="frame-12" style="
+          background-image: url(./img/image.png)"></div>
+        </div>
+        <div class="frame-13">
+
+            for문 돌려 4번 출력
+          <div class="frame-14" style="
+          background-image: url(./img/frame-91.png)"></div>
+          
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+:root {
+    --primary: rgba(231, 29, 29, 1);
+    --black: rgba(0, 0, 0, 1);
+    --white: rgba(255, 255, 255, 1);
+    --star: rgba(241, 197, 40, 1);
+    --body-regular-font-family: "RopaSans-Regular", Helvetica;
+    --body-regular-font-weight: 400;
+    --body-regular-font-size: 16px;
+    --body-regular-letter-spacing: 0px;
+    --body-regular-line-height: 150%;
+    --body-regular-font-style: normal;
+    --poster-mini-shadow: 4px 4px 4px 0px rgba(196, 196, 196, 0.5), -4px -3px 4px 0px rgba(196, 196, 196, 0.2),
+      4px -2px 4px 0px rgba(196, 196, 196, 0.2);
+    --variable-collection-gray: rgba(123, 123, 123, 1);
+    --variable-collection-stroke: var(--variable-collection-gray);
+    --variable-collection-light-gary: rgba(196, 196, 196, 1);
+  }
+  
+.main-lala {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    background-color: var(--black);
+  }
+  
+  .main-lala .navbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 13px 20px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  
+  .main-lala .text-wrapper {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    font-family: "Actor-Regular", Helvetica;
+    font-weight: 400;
+    color: var(--white);
+    font-size: 33px;
+    letter-spacing: 0;
+    line-height: 33px;
+    white-space: nowrap;
+  }
+  
+  .main-lala .frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px 20px 16px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  
+  .main-lala .main-image {
+    display: flex;
+    height: 1021px;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 13px 16px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+  
+  .main-lala .div {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    font-family: "Abril Fatface-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 281px;
+    letter-spacing: 0;
+    line-height: 224.8px;
+    white-space: nowrap;
+  }
+  
+  .main-lala .box-office {
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    height: 1021px;
+    background-color: #ffffff;
+    overflow: hidden;
+  }
+  
+  .main-lala .overlap-group {
+    position: relative;
+    width: 2155px;
+    height: 1053px;
+    top: 12px;
+    left: -130px;
+  }
+  
+  .main-lala .BOX-OFFICE {
+    position: absolute;
+    top: 0;
+    left: 130px;
+    font-family: "Abril Fatface-Regular", Helvetica;
+    font-weight: 400;
+    color: var(--black);
+    font-size: 228px;
+    letter-spacing: 0;
+    line-height: 182.4px;
+  }
+  
+  .main-lala .frame-2 {
+    display: flex;
+    width: 2099px;
+    align-items: center;
+    gap: 32px;
+    padding: 32px 200px;
+    position: absolute;
+    top: 360px;
+    left: 28px;
+    background-color: var(--black);
+    transform: rotate(-8.3deg);
+  }
+  
+  .main-lala .frame-3 {
+    position: relative;
+    width: 320.28px;
+    height: 480.42px;
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+  
+  
+  
+  
+  .main-lala .webgin {
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    height: 1261px;
+    background-color: var(--black);
+  }
+  
+  .main-lala .overlap {
+    position: relative;
+    width: 1850px;
+    height: 1202px;
+    top: 6px;
+    left: 57px;
+  }
+  
+  .main-lala .FILM-s-CHOICE-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 950px;
+  }
+  
+  .main-lala .FILM-s-CHOICE {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    font-family: "Abril Fatface-Regular", Helvetica;
+    font-weight: 400;
+    color: var(--white);
+    font-size: 228px;
+    text-align: right;
+    letter-spacing: 0;
+    line-height: 182.4px;
+  }
+  
+  .main-lala .overlap-2 {
+    position: absolute;
+    width: 1840px;
+    height: 1155px;
+    top: 47px;
+    left: 0;
+  }
+  
+  .main-lala .frame-8 {
+    position: absolute;
+    width: 924px;
+    height: 1155px;
+    top: 0;
+    left: 0;
+    background-image: url(./images/design/dtl_thum.png);
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+  
+  .main-lala .frame-9 {
+    display: flex;
+    flex-wrap: wrap;
+    width: 1044px;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0px 0px;
+    position: absolute;
+    top: 897px;
+    left: 796px;
+  }
+  
+  .main-lala .text-wrapper-2 {
+    width: 839px;
+    margin-top: -1px;
+    font-family: "Actor-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 36px;
+    text-align: right;
+    line-height: 43.2px;
+    position: relative;
+    letter-spacing: 0;
+  }
+  
+  .main-lala .text-wrapper-3 {
+    width: 205px;
+    height: 42px;
+    margin-top: -1px;
+    font-family: "Actor-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 36px;
+    text-align: right;
+    line-height: 43.2px;
+    white-space: nowrap;
+    position: relative;
+    letter-spacing: 0;
+  }
+  
+  .main-lala .p {
+    width: 839px;
+    height: 215px;
+    font-family: "Actor-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 36px;
+    text-align: right;
+    line-height: 43.2px;
+    position: relative;
+    letter-spacing: 0;
+  }
+  
+  .main-lala .collection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 16px 0px 32px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: var(--white);
+  }
+  
+  .main-lala .div-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 64px;
+    position: relative;
+    flex: 0 0 auto;
+  }
+  
+  .main-lala .text-wrapper-4 {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    font-family: "Abril Fatface-Regular", Helvetica;
+    font-weight: 400;
+    color: var(--black);
+    font-size: 228px;
+    letter-spacing: 0;
+    line-height: 182.4px;
+    white-space: nowrap;
+  }
+  
+  .main-lala .frame-10 {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 32px;
+    padding: 0px 64px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  
+  .main-lala .frame-11 {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 32px;
+    position: relative;
+    align-self: stretch;
+    flex: 0 0 auto;
+  }
+  
+  .main-lala .text-wrapper-5 {
+    width: fit-content;
+    font-family: "Alef-Bold", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 74px;
+    line-height: 59.2px;
+    white-space: nowrap;
+    position: relative;
+    letter-spacing: 0;
+  }
+  
+  .main-lala .text-wrapper-6 {
+    position: relative;
+    width: fit-content;
+    font-family: "Alef-Bold", Helvetica;
+    font-weight: 700;
+    color: #7b7b7b;
+    font-size: 53px;
+    letter-spacing: 0;
+    line-height: 42.4px;
+    white-space: nowrap;
+  }
+  
+  .main-lala .frame-12 {
+    flex: 0 0 auto;
+    border-radius: 100px;
+    position: relative;
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+  
+  .main-lala .frame-13 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 64px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  
+  .main-lala .frame-14 {
+    width: 380px;
+    height: 543px;
+    box-shadow: 0px 4px 4px #00000040;
+    position: relative;
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+  
+
+</style>

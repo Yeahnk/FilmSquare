@@ -1,0 +1,61 @@
+package comm.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URLEncoder;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.hc.client5.http.fluent.Request;
+
+import movie.service.IMovieInfoService;
+import movie.service.MovieInfoServiceImpl;
+import movie.vo.MovieInfoVO;
+
+/**
+ * 상단 검색창에 키워드(kwd)를 검색하면 해당 키워드가 포함된 영화정보, 인물정보, 관련기사정보를 불러오기 위한 컨트롤러
+ * @author 홍진영
+ *
+ */
+@WebServlet("/search.do")
+public class SearchContentsController extends HttpServlet {
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		doPost(req, resp);
+		
+	}
+		
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		String kwd = req.getParameter("search");
+		
+		// 영화 정보 가져오기
+		IMovieInfoService movieInfoService = MovieInfoServiceImpl.getInstance();
+		
+		List<MovieInfoVO> movieInfoList = movieInfoService.getMovieList(kwd);
+		
+		req.setAttribute("movieInfoList", movieInfoList);
+		
+		System.out.println("search.do 에 있는 movieInfoList = " + movieInfoList);
+		
+		req.getRequestDispatcher("/views/search.jsp").forward(req, resp);
+		
+		
+		// 인물정보 가져오기
+		
+		
+		// 뉴스기사 가져오기
+		
+	
+	}
+
+}

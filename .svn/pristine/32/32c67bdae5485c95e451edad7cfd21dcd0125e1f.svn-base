@@ -1,0 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div id="reviewCnt">지금까지 총 000개의 리뷰가 작성되었습니다!</div>
+<footer class="container-fluid text-center">
+  <p>대충 회사 정보</p>
+</footer>
+
+</body>
+</html>

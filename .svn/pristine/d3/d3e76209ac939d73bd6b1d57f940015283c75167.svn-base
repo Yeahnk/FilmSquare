@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="movie">
+
+	<!-- 키워드 받아서 키워드가 포함된 영화 전체 출력 -->
+	<select id="getMovieList" parameterType="String" resultType="movieInfoVO">
+		
+		select * from movie 
+		where MV_TITLE like '%' || #{kwd} || '%'
+		
+	</select>
+
+
+
+</mapper>

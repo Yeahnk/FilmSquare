@@ -1,0 +1,31 @@
+package member.servive;
+
+import java.util.Collection;
+import java.util.List;
+
+import javax.servlet.http.Part;
+
+import member.vo.AtchFileVO;
+import member.vo.MemberVO;
+
+
+
+public interface IAtchFileService {
+
+	public AtchFileVO saveAtchFileList(Collection<Part> parts);
+	
+
+	public List<AtchFileVO> getAtchFileList(AtchFileVO atchFileVO);
+	
+
+	public AtchFileVO getAtchFileDetail(AtchFileVO atchFileVO);
+	
+	
+	public AtchFileVO getMember(String memId);
+	
+	/**
+	 * ID로 회원정보를 조회하기 위한 메서드
+	 * @param 로그인 시 세션에 저장된 memId 
+	 * @return
+	 */
+}

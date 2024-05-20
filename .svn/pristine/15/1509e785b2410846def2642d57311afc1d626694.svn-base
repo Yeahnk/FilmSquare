@@ -1,0 +1,65 @@
+package admin.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.session.SqlSession;
+
+import config.MyBatisUtil;
+import member.vo.MemberVO;
+
+
+
+
+public class AdminMboardDaoImpl implements AdminMboardDao{
+	
+	private static AdminMboardDao adminMboardDao;
+	
+	private AdminMboardDaoImpl() {
+		
+	}
+	
+	public static AdminMboardDao getInstance() {
+		if(adminMboardDao == null) {
+			adminMboardDao = new AdminMboardDaoImpl();
+		}
+		
+		return adminMboardDao;
+	}
+	
+	@Override
+	public List<MemberVO> selectAll() {
+		List<MemberVO> memberList = new ArrayList<MemberVO>();
+		
+		SqlSession sqlSession = MyBatisUtil.getInstance(true);
+		
+		try {
+			memberList = sqlSession.selectList("adminMember.selectAll");
+			
+		} catch (PersistenceException e) {
+			e.printStackTrace();
+		}finally {
+			sqlSession.close();
+		}
+		return memberList;
+	}
+
+	@Override
+	public List<MemberVO> blackList() {
+		List<MemberVO> memberList = new ArrayList<MemberVO>();
+		
+		SqlSession sqlSession = MyBatisUtil.getInstance(true);
+		
+		try {
+			memberList = sqlSession.selectList("adminMember.blackList");
+			
+		} catch (PersistenceException e) {
+			e.printStackTrace();
+		}finally {
+			sqlSession.close();
+		}
+		return memberList;
+	}
+
+}

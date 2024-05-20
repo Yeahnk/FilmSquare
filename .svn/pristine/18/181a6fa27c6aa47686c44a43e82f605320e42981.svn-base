@@ -1,0 +1,11 @@
+package admin.vo;
+
+import java.time.LocalDate;
+
+public class QnaReplyVO {
+
+	private int qareId;
+	private int qaId;
+	private String qareContent;
+	private LocalDate qareDate;
+}

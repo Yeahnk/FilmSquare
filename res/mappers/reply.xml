@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reply">
+
+
+<insert id="insertReply" parameterType="ReplyVO">
+    <selectKey keyProperty="mvcreId" resultType="int" order="BEFORE">
+        SELECT MVCREPLY_seq.nextval AS mvcreId FROM dual
+    </selectKey>
+    
+    INSERT INTO MVCREPLY (MVCRE_ID, MEM_ID, MVC_ID, MVCRE_CONTENT, MVCREC_DATE)
+    VALUES (MVCREPLY_num_seq.nextval, #{memId}, #{mvcId}, #{mvcreContent}, sysdate)
+</insert>
+	
+<select id="getList" parameterType="int" resultType="ReplyVO">
+
+SELECT
+    a.MVCRE_ID,
+    a.MEM_ID,
+    a.MVC_ID,
+    a.MVCRE_CONTENT,
+    a.MVCREC_DATE,
+    b.MEM_NCNM AS memNcnm,
+    c.MEMP_STRE_NM AS mempStreNm
+FROM
+    MVCREPLY a
+    INNER JOIN member b ON a.MEM_ID = b.MEM_ID
+    INNER JOIN MEMBERPROFILE c ON a.MEM_ID = c.MEM_ID
+WHERE
+    a.MVC_ID = #{mvcId}
+ORDER BY
+    a.MVCREC_DATE desc;
+
+</select>
+	
+
+	
+</mapper>

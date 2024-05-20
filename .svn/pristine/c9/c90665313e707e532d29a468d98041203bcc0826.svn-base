@@ -1,0 +1,37 @@
+package collection.vo;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+
+import lombok.Data;
+
+@Data
+public class CollectionVO {
+	private BigDecimal clId;
+	private String memId;
+	private String clTitle;
+	private Timestamp clDate;
+	private String clYn;
+	private BigDecimal likeCnt;
+	
+	
+	public CollectionVO(int clId) {
+		super();
+		this.clId = new BigDecimal(clId);
+	}
+
+
+	public CollectionVO(BigDecimal clId, String memId, String clTitle, Timestamp clDate, String clYn) {
+		super();
+		this.clId = clId;
+		this.memId = memId;
+		this.clTitle = clTitle;
+		this.clDate = clDate;
+		this.clYn = clYn;
+	}
+	
+	
+	
+	
+}

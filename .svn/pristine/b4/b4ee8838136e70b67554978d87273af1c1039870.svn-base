@@ -1,0 +1,52 @@
+package admin.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import admin.dao.IAdminMboardDao;
+import admin.dao.AdminMboardDaoImpl;
+import member.vo.MemberVO;
+
+
+
+
+public class AdminMboardServiceImpl implements IAdminMboardService{
+
+	private static IAdminMboardService adminMboardService;
+	private IAdminMboardDao adminMboardDao;
+	
+	private AdminMboardServiceImpl() {
+		adminMboardDao = AdminMboardDaoImpl.getInstance();
+		
+	}
+	public static IAdminMboardService getInstance() {
+		
+		if(adminMboardService == null) {
+			adminMboardService = new AdminMboardServiceImpl();
+		}
+		return adminMboardService;
+	}
+	
+	@Override
+	public List<MemberVO> selectAll() {
+		List<MemberVO> memberList = adminMboardDao.selectAll();
+		return memberList;
+	}
+	
+	@Override
+	public List<MemberVO> blackList() {
+		List<MemberVO> memberList = adminMboardDao.blackList();
+		return memberList;
+	}
+	@Override
+	public int countList() {
+		int countList = 0;
+		try {
+			countList = adminMboardDao.countList();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return countList;
+	}
+
+}

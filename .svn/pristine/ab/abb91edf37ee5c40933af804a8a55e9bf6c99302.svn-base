@@ -1,0 +1,38 @@
+package movie.vo;
+
+import java.time.LocalDate;
+
+import lombok.Data;
+
+@Data
+public class MvCommentVO {
+	private int mvcId;
+	
+	private String memId;
+	
+	private int mvId;
+	
+	private String mvcContent; //50자까지만
+	
+	private LocalDate mvcDate;
+	
+	private String mvcSpoyn;
+	
+	private LocalDate mvcRegdt;
+	
+	private String mvcDelyn;
+	
+	////
+	
+	private String memNcnm; //작성자닉네임
+	
+	private int mvcLikeCnt; //코멘트좋아요수
+	
+	private int mvcReplyCnt; //코멘트리플수
+	
+	private int memMvgRating; //작성자평점
+	
+	private String mempPath; //작성자프로필사진경로
+	
+	private String FullContent; //내용 전부
+}

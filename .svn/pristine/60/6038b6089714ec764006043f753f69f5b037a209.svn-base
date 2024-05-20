@@ -1,0 +1,7 @@
+package collection.service;
+
+public interface IClLikeService {
+
+	int countLike(int clId);
+
+}

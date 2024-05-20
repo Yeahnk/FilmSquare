@@ -1,0 +1,72 @@
+
+<%@page import="admin.vo.MvcReportVO"%>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+
+	List<MvcReportVO> mvcReportList =(List<MvcReportVO>)request.getAttribute("mvcReportList");
+	
+	String msg = session.getAttribute("msg") == null ? ""
+			: (String)session.getAttribute("msg");
+	session.removeAttribute("msg");
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>미처리 신고 조회</title>
+</head>
+<body>
+	<h1>미처리 신고 조회</h1>
+	<h3>미처리 신고 내역을 조회합니다.</h3>
+	<table border="1">
+		<tr>
+			<th>순번</th>
+			<th>코멘트 내용</th>
+			<th>코멘트 작성자 이메일</th>
+			<th>신고자 이메일</th>
+			<th>신고사유 및 비고</th>
+			<th>관리</th>
+		</tr>
+
+<%
+	if(mvcReportList.size()==0){
+		
+%>	
+		<tr>
+			<td colspan="6">회원 정보가 존재하지 않습니다.</td>
+		
+		</tr>
+<%
+	}else{
+		
+		for(MvcReportVO mv : mvcReportList){
+		
+%>		
+		<tr>
+			<td><%=mv.getMemId() %></td>
+			<td><%=mv.getMvcContent() %></td>
+			<td><%=mv.getMvc_memId() %></td>
+			<td><%=mv.getMvcrpId() %></td>
+			<td><%=mv.getMvcrpContent() %></td>
+			<td><a href="#">수정</a></td>
+		</tr>
+<%
+		}
+	}
+%>
+	</table>
+<%
+	if(msg.equals("성공")){
+%>
+<script>
+	alert('정상적으로 처리되었습니다.');
+</script>
+<%
+	}
+%>
+</body>
+</html>

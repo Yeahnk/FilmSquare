@@ -1,0 +1,151 @@
+package character.controller;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONObject;
+
+import character.service.CharacterServiceImpl;
+import character.service.ICharacterService;
+import character.vo.CharacterVO;
+import character.vo.PersonImageVO;
+import character.vo.PersonInfoVO;
+import character.vo.PersonLikeVO;
+import member.vo.MemberVO;
+
+
+@WebServlet("/personDetail.do")
+public class PersonDetail extends HttpServlet {
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 인물 정보  
+		
+		long psId = Long.parseLong(req.getParameter("psId"));
+		System.out.println(psId);
+		
+		ICharacterService charService = CharacterServiceImpl.getInstance();
+		
+		List<PersonInfoVO> psifList = charService.searchInfo(psId);
+		
+		
+		req.setAttribute("psifList", psifList);
+
+		
+		System.out.println(psifList);	
+		
+		// 인물 사진
+		
+		List<PersonImageVO> psiList = charService.searchImage(psId);
+		
+		req.setAttribute("psiList", psiList);
+		
+		System.out.println(psiList);
+
+		
+		
+		
+		// 좋아요 수 
+		PersonLikeVO pslkvo = charService.personLk(psId);
+		
+		if (pslkvo != null) {
+		    req.setAttribute("pslkvo", pslkvo);
+		    System.out.println(pslkvo);
+		} else {
+		   
+		    System.out.println("pslkvo가 null");
+		}
+
+		req.getRequestDispatcher("/views/personDetail.jsp").forward(req, resp);
+		
+		
+		
+	}
+	
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	
+	
+		req.setCharacterEncoding("UTF-8");
+		
+		BufferedReader reader = req.getReader();
+		StringBuilder str = new StringBuilder();
+		String line;
+		while((line = reader.readLine()) != null) {
+			str.append(line);
+		}
+		
+		JSONObject jsonRequest = new JSONObject(str.toString());
+		
+		MemberVO mv = (MemberVO) req.getSession().getAttribute("LOGIN_MEMBER");
+		mv.getMemId();
+		System.out.println(mv.getMemId());
+		
+		
+		
+//		String memId = jsonRequest.getString("memId");
+		Long psId = jsonRequest.getLong("psId");
+//		String pslkYn = jsonRequest.getString("pslkYn");
+		System.out.println(psId);
+		
+		resp.setContentType("text/html;charset=UTF-8");
+		PrintWriter out = resp.getWriter();
+		
+		PersonLikeVO plvo = new PersonLikeVO();
+		plvo.setMemId(mv.getMemId());
+		plvo.setPsId(psId);
+		
+		
+		ICharacterService charService = CharacterServiceImpl.getInstance();
+		
+		// 데이터 없을때
+		if(mv.getMemId() != null && psId == 0) {
+			
+			
+			int cnt = charService.createlike(plvo);
+			
+			String msg = "";
+			
+			if (cnt > 0) {
+				msg = "좋아요 성공";
+			} else {
+				msg = "좋아요 실패";
+			}
+			
+			req.getSession().setAttribute("msg", msg);
+			
+			resp.getWriter().print(cnt);
+			
+		}else {
+			
+			int cnt = charService.updatelike(plvo);
+			
+			String msg = "";
+
+			if (cnt > 0) {
+				msg = "좋아요 취소 성공";
+			} else {
+				msg = "좋아요 취소 실패";
+			}
+
+			req.getSession().setAttribute("msg", msg);
+
+			resp.getWriter().print(cnt);
+		}
+		
+		
+		
+	}	
+	
+	
+
+}

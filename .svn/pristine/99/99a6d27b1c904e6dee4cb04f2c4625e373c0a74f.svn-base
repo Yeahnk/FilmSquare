@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poster">
+
+	<select id="getPosterByMvId" parameterType="int" resultType="PosterVO">
+		
+		select * from poster where POSTER_ID = (select min(poster_id) from poster where mv_id = #{mvId})
+		
+	</select>
+	
+	<select id="pstInfo"  resultType="movie.vo.PosterInfoVO">
+	    <![CDATA[
+	    SELECT *
+		    FROM (
+		        SELECT
+		            PS_ID,
+		            MV_ID,
+		            ACTOR_ROLE,
+		            MV_TITLE,
+		            MV_RDATE,
+		            MV_DIRECTOR,
+		            POSTER_IMG,
+		            ROWNUM AS rnum
+		        FROM (
+		            SELECT
+		                actor.PS_ID,
+		                actor.MV_ID,
+		                actor.ACTOR_ROLE,
+		                MAX(movie.MV_TITLE) AS MV_TITLE,
+		                MAX(movie.MV_RDATE) AS MV_RDATE,
+		                MAX(movie.MV_DIRECTOR) AS MV_DIRECTOR,
+		                MAX(poster.POSTER_IMG) AS POSTER_IMG
+		            FROM
+		                actor
+		            JOIN
+		                movie ON actor.MV_ID = movie.MV_ID
+		            LEFT JOIN
+		                poster ON movie.MV_ID = poster.MV_ID
+		            WHERE
+		                actor.PS_ID = #{psId}
+		            GROUP BY
+		                actor.PS_ID, actor.MV_ID, actor.ACTOR_ROLE
+		            ORDER BY
+		                MAX(movie.MV_RDATE) DESC
+		        )
+		    )
+		    WHERE rnum <= 4
+		]]>
+</select>
+
+<select id="getStillListByMvId" parameterType="int" resultType="PosterVO">
+
+	select STILL_ID poster_id, STILL_URL poster_img from still where mv_id = #{mvId}
+
+</select>
+
+
+</mapper>

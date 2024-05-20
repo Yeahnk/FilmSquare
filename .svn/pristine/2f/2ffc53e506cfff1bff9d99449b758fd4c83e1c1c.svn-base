@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dbTest">
+
+	
+	<select id="selectPersonList" resultType="PersonVO">
+	
+		select * from person where ps_id = #{i}
+	
+	</select>
+	
+	<select id="selectSameNameList" resultType="PersonVO">
+	
+		select * from person where ps_name = #{psName} and ps_id != #{psId}
+	
+	</select>
+	
+	
+	
+	
+	<select id="selectImages" parameterType="Map" resultType="PersonImageVO">
+	
+		select * from personimage where ps_id != #{winPerson} and ps_id = #{losingPerson} 
+	
+	</select>
+	
+	<update id="updateImages" parameterType="Map">
+	
+		update personimage set ps_id = #{winPerson} where ps_id = #{losingPerson}
+	
+	</update>
+	
+	
+	
+	<select id="selectPsInfo" parameterType="Map" resultType="PersonInfoVO">
+	
+		select * from personinfo where ps_id = #{winPerson}  
+	
+	</select>
+	
+	<update id="updatePsInfo" parameterType="Map">
+	
+		update personinfo set ps_id = #{winPerson} where ps_id = #{losingPerson}
+	
+	</update>
+	
+	
+	
+	
+	
+	<update id="updateActors" parameterType="Map">
+	
+		update actor set ps_id = #{winPerson} where ps_id = #{losingPerson}
+	
+	</update>
+	
+
+	
+	<delete id="deleteLoser" parameterType="Map">
+	
+		delete from person where ps_id = #{losingPerson}
+	
+	</delete>
+	
+
+
+</mapper>

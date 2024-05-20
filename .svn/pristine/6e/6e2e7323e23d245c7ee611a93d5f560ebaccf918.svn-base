@@ -1,0 +1,25 @@
+package movie.vo;
+
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class CalendarVO {
+	
+	private int year;
+	private int month;
+	private List<ReleasingMovieVO> releasingList;
+	private List<MovieInfoVO> userMovie;
+	
+	
+	public CalendarVO(int year, int month, List<ReleasingMovieVO> releasingList) {
+		super();
+		this.year = year;
+		this.month = month;
+		this.releasingList = releasingList;
+	}
+
+	
+	
+}
